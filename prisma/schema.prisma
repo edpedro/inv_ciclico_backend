@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String    @id @default(uuid())
+  name       String
+  username   String
+  password   String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  
+  baseNameInventarios NameInventarioOnUsers[]
+  
+  @@map("users")
+}
+
+model BaseInventario {
+  id        Int      @default(autoincrement()) @id
+  item     String
+  descricao   String
+  endereco   String
+  tipoEstoque   String
+  catItem   String
+  saldoWms    Float
+  saldoFisico    Float?  
+  status   Boolean? @default(false)
+
+  baseNameInventario BaseNameInventario @relation(fields: [baseNameInventario_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  baseNameInventario_id String
+
+  @@map("baseInventario") 
+
+}
+model BaseNameInventario {
+  id    String      @id @default(uuid())  
+  date String
+  name String
+  status   Boolean @default(false)
+
+  users NameInventarioOnUsers[]
+
+  baseInventario BaseInventario[]
+
+  @@map("baseNameInventario") 
+
+}
+
+model NameInventarioOnUsers {
+  user User @relation(fields: [user_id], references: [id], onUpdate: Cascade)
+  user_id String
+
+  nameInventario BaseNameInventario @relation(fields: [nameInventario_id], references: [id], onUpdate: Cascade)
+  nameInventario_id String
+
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([user_id, nameInventario_id])
+}
