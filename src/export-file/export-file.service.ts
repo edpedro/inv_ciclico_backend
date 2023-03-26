@@ -3,15 +3,16 @@ import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as XLSX from 'xlsx';
 import { join } from 'path';
+import { convertDate } from 'src/utils/convertDate';
 
 @Injectable()
 export class ExportFileService {
   constructor(private readonly prisma: PrismaService) {}
 
   async exportFicha(id: string, @Res() res: Response) {
-    const nameInvExists = await this.prisma.baseNameInventario.findFirst({
+    const nameInvExists = await this.prisma.baseNameInventario.findUnique({
       where: {
-        id,
+        id: id,
       },
     });
 
@@ -41,6 +42,8 @@ export class ExportFileService {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
 
+    const newDate = convertDate(nameInvExists.date);
+
     const ws = XLSX.utils.json_to_sheet(baseInvExists);
     const wb = XLSX.utils.book_new();
 
@@ -49,7 +52,7 @@ export class ExportFileService {
     XLSX.writeFile(wb, 'ficha.xlsx');
 
     const file = join(__dirname, '..', '..', 'ficha.xlsx');
-    res.download(file, `ficha_${nameInvExists.name}.xlsx`);
+    res.download(file, `ficha_${nameInvExists.name}-${newDate}.xlsx`);
 
     return baseInvExists;
   }
