@@ -64,6 +64,9 @@ export class BaseInventarioService {
       where: {
         baseNameInventario_id: id,
       },
+      orderBy: {
+        endereco: 'asc',
+      },
     });
 
     if (baseInvExists.length <= 0) {
@@ -88,15 +91,22 @@ export class BaseInventarioService {
       );
     }
 
-    const enderecoContagem = baseInvExists.reduce((acumulador, valorAtual) => {
-      acumulador[valorAtual.endereco] =
-        (acumulador[valorAtual.endereco] || 0) + 1;
-      return acumulador;
-    }, {});
+    const resultado = baseInvExists.reduce((acc, item) => {
+      const enderecoExistente = acc.find((e) => e.endereco === item.endereco);
 
-    const resultado = Object.keys(enderecoContagem).map((endereco) => {
-      return { endereco: endereco, item: enderecoContagem[endereco] };
-    });
+      if (enderecoExistente) {
+        enderecoExistente.item += 1;
+        enderecoExistente.status = enderecoExistente.status && item.status;
+      } else {
+        acc.push({
+          endereco: item.endereco,
+          item: 1,
+          status: item.status,
+        });
+      }
+
+      return acc;
+    }, []);
 
     return resultado;
   }
