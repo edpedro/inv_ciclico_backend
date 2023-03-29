@@ -32,6 +32,7 @@ CREATE TABLE "baseNameInventario" (
     "date" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL DEFAULT false,
+    "create_id" TEXT NOT NULL,
 
     CONSTRAINT "baseNameInventario_pkey" PRIMARY KEY ("id")
 );
@@ -48,6 +49,9 @@ CREATE TABLE "NameInventarioOnUsers" (
 
 -- AddForeignKey
 ALTER TABLE "baseInventario" ADD CONSTRAINT "baseInventario_baseNameInventario_id_fkey" FOREIGN KEY ("baseNameInventario_id") REFERENCES "baseNameInventario"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "baseNameInventario" ADD CONSTRAINT "baseNameInventario_create_id_fkey" FOREIGN KEY ("create_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "NameInventarioOnUsers" ADD CONSTRAINT "NameInventarioOnUsers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -30,11 +30,7 @@ export class BaseInventarioService {
     const nameInvExists = await this.prisma.baseNameInventario.findFirst({
       where: {
         id: dataInventario.baseNameInventario_id,
-        users: {
-          some: {
-            user_id: req.user.id,
-          },
-        },
+        create_id: req.user.id,
       },
     });
 
@@ -66,6 +62,15 @@ export class BaseInventarioService {
       },
       orderBy: {
         endereco: 'asc',
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
       },
     });
 
@@ -116,11 +121,7 @@ export class BaseInventarioService {
       const nameInvExists = await this.prisma.baseNameInventario.findFirst({
         where: {
           id,
-          users: {
-            some: {
-              user_id: req.user.id,
-            },
-          },
+          create_id: req.user.id,
         },
       });
 
@@ -156,7 +157,6 @@ export class BaseInventarioService {
     try {
       const nameInvExists = await this.prisma.baseNameInventario.findFirst({
         where: {
-          id,
           users: {
             some: {
               user_id: req.user.id,
@@ -186,7 +186,19 @@ export class BaseInventarioService {
         where: {
           id: totalInvExists.id,
         },
-        data,
+        data: {
+          ...data,
+          username_id: req.user.id,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+            },
+          },
+        },
       });
 
       const inventarios = await this.prisma.baseInventario.findMany({

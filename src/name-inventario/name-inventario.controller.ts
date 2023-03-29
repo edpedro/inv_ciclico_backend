@@ -20,8 +20,8 @@ export class NameInventarioController {
   constructor(private readonly nameInventarioService: NameInventarioService) {}
 
   @Post()
-  create(@Body() data: CreateNameInventarioDto) {
-    return this.nameInventarioService.create(data);
+  create(@Body() data: CreateNameInventarioDto, @Req() req: any) {
+    return this.nameInventarioService.create(data, req);
   }
 
   @Get()
@@ -44,7 +44,7 @@ export class NameInventarioController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.nameInventarioService.remove(id);
+  remove(@Param('id') id: string, @Req() req: any) {
+    return this.nameInventarioService.remove(id, req);
   }
 }

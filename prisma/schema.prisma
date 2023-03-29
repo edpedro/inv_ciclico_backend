@@ -18,6 +18,8 @@ model User {
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
   
+  baseInventario BaseInventario[]
+  baseNameInventario BaseNameInventario[]
   baseNameInventarios NameInventarioOnUsers[]
   
   @@map("users")
@@ -34,6 +36,9 @@ model BaseInventario {
   saldoFisico    Float?  
   status   Boolean? @default(false)
 
+  user User? @relation(fields: [username_id], references: [id])
+  username_id String?
+
   baseNameInventario BaseNameInventario @relation(fields: [baseNameInventario_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   baseNameInventario_id String
 
@@ -46,8 +51,10 @@ model BaseNameInventario {
   name String
   status   Boolean @default(false)
 
-  users NameInventarioOnUsers[]
+  user User @relation(fields: [create_id], references: [id])
+  create_id String
 
+  users NameInventarioOnUsers[]
   baseInventario BaseInventario[]
 
   @@map("baseNameInventario") 

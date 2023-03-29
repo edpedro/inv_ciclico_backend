@@ -7,10 +7,10 @@ import { UpdateNameInventarioDto } from './dto/update-name-inventario.dto';
 export class NameInventarioService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateNameInventarioDto) {
+  async create(data: CreateNameInventarioDto, req: any) {
     const nameExist = await this.prisma.baseNameInventario.findFirst({
       where: {
-        name: data.date,
+        name: data.name,
       },
     });
 
@@ -25,10 +25,11 @@ export class NameInventarioService {
       data: {
         name: data.name,
         date: data.date,
+        create_id: req.user.id,
         users: {
           create: data.user_id.map((user_id) => ({
             user_id,
-            assignedBy: 'admin',
+            assignedBy: 'auth',
           })),
         },
       },
@@ -38,9 +39,27 @@ export class NameInventarioService {
   async findAll(req: any) {
     const nameInv = await this.prisma.baseNameInventario.findMany({
       where: {
-        users: {
-          some: {
-            user_id: req.user.id,
+        OR: [
+          { create_id: req.user.id },
+          {
+            users: {
+              some: {
+                user_id: req.user.id,
+              },
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        date: true,
+        name: true,
+        status: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
           },
         },
       },
@@ -57,11 +76,16 @@ export class NameInventarioService {
     const nameInv = await this.prisma.baseNameInventario.findFirst({
       where: {
         id: id,
-        users: {
-          some: {
-            user_id: req.user.id,
+        OR: [
+          { create_id: req.user.id },
+          {
+            users: {
+              some: {
+                user_id: req.user.id,
+              },
+            },
           },
-        },
+        ],
       },
     });
 
@@ -81,11 +105,7 @@ export class NameInventarioService {
       const nameInv = await this.prisma.baseNameInventario.findFirst({
         where: {
           id: id,
-          users: {
-            some: {
-              user_id: req.user.id,
-            },
-          },
+          create_id: req.user.id,
         },
       });
 
@@ -107,11 +127,12 @@ export class NameInventarioService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: string, req: any) {
     try {
-      const nameInv = await this.prisma.baseNameInventario.findUnique({
+      const nameInv = await this.prisma.baseNameInventario.findFirst({
         where: {
           id: id,
+          create_id: req.user.id,
         },
         include: {
           users: true,

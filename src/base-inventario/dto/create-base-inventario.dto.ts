@@ -8,4 +8,5 @@ export class CreateBaseInventarioDto {
   readonly saldoFisico?: number;
   readonly status?: boolean;
   readonly baseNameInventario_id: string;
+  readonly username_id?: string;
 }
