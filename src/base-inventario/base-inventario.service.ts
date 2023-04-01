@@ -104,6 +104,7 @@ export class BaseInventarioService {
         enderecoExistente.status = enderecoExistente.status && item.status;
       } else {
         acc.push({
+          id: item.id,
           endereco: item.endereco,
           item: 1,
           status: item.status,
