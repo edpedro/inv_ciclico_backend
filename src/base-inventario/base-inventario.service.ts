@@ -109,6 +109,7 @@ export class BaseInventarioService {
           endereco: item.endereco,
           item: 1,
           status: item.status,
+          baseNameInventario_id: item.baseNameInventario_id,
         });
       }
 
