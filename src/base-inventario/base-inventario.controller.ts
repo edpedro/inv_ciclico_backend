@@ -15,6 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions, UploadDto } from 'src/utils/file-upload.dto';
 import { BaseInventarioService } from './base-inventario.service';
+import { ListItemDto } from './dto/list-item.dto';
 import { UpdateBaseInventarioDto } from './dto/update-base-inventario.dto';
 
 @Controller('ciclico')
@@ -45,6 +46,11 @@ export class BaseInventarioController {
   async removeInv(@Param('id') id: string, @Req() req: any) {
     return await this.baseInventarioService.remove(id, req);
   }
+  @Get('item/:id')
+  async listItem(@Body() data: ListItemDto, @Param('id') id: string) {
+    return await this.baseInventarioService.listItem(data, id);
+  }
+
   @Patch(':id')
   async updateItem(
     @Body() data: UpdateBaseInventarioDto,

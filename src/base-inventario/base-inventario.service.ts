@@ -4,6 +4,7 @@ import { UploadDto } from 'src/utils/file-upload.dto';
 import { CreateBaseInventarioDto } from './dto/create-base-inventario.dto';
 import * as XLSX from 'xlsx';
 import { UpdateBaseInventarioDto } from './dto/update-base-inventario.dto';
+import { ListItemDto } from './dto/list-item.dto';
 
 @Injectable()
 export class BaseInventarioService {
@@ -115,6 +116,27 @@ export class BaseInventarioService {
     }, []);
 
     return resultado;
+  }
+
+  async listItem(data: ListItemDto, id: string) {
+    console.log(data.endereco);
+    const baseInvExists = await this.prisma.baseInventario.findMany({
+      where: {
+        baseNameInventario_id: id,
+        endereco: {
+          equals: data.endereco,
+        },
+      },
+      orderBy: {
+        endereco: 'asc',
+      },
+    });
+
+    if (baseInvExists.length <= 0) {
+      throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
+    }
+
+    return baseInvExists;
   }
 
   async remove(id: string, req: any) {
