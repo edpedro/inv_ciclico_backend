@@ -4,6 +4,7 @@ import { UploadDto } from 'src/utils/file-upload.dto';
 import { CreateBaseInventarioDto } from './dto/create-base-inventario.dto';
 import * as XLSX from 'xlsx';
 import { UpdateBaseInventarioDto } from './dto/update-base-inventario.dto';
+import { ListEnderecoDto } from './dto/list-endereco.dto';
 import { ListItemDto } from './dto/list-item.dto';
 
 @Injectable()
@@ -82,7 +83,7 @@ export class BaseInventarioService {
     return baseInvExists;
   }
 
-  async listEndereco(id: string) {
+  async listTotalEndereco(id: string) {
     const baseInvExists = await this.prisma.baseInventario.findMany({
       where: {
         baseNameInventario_id: id,
@@ -119,14 +120,31 @@ export class BaseInventarioService {
     return resultado;
   }
 
-  async listItem(data: ListItemDto, id: string) {
-    console.log(data.endereco);
+  async listEndereco(data: ListEnderecoDto, id: string) {
     const baseInvExists = await this.prisma.baseInventario.findMany({
       where: {
         baseNameInventario_id: id,
         endereco: {
           equals: data.endereco,
         },
+      },
+      orderBy: {
+        endereco: 'asc',
+      },
+    });
+
+    if (baseInvExists.length <= 0) {
+      throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
+    }
+
+    return baseInvExists;
+  }
+
+  async listItem(data: ListItemDto, id: string) {
+    const baseInvExists = await this.prisma.baseInventario.findMany({
+      where: {
+        baseNameInventario_id: id,
+        id: data.id,
       },
       orderBy: {
         endereco: 'asc',

@@ -1,3 +1,3 @@
 export class ListItemDto {
-  readonly endereco: string;
+  readonly id: number;
 }
