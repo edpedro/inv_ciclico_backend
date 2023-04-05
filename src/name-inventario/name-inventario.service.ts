@@ -50,6 +50,9 @@ export class NameInventarioService {
           },
         ],
       },
+      orderBy: {
+        created_at: 'desc',
+      },
       select: {
         id: true,
         date: true,

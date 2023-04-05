@@ -35,6 +35,8 @@ model BaseInventario {
   saldoWms    Float
   saldoFisico    Float?  
   status   Boolean? @default(false)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
 
   user User? @relation(fields: [username_id], references: [id])
   username_id String?
@@ -50,6 +52,8 @@ model BaseNameInventario {
   date String
   name String
   status   Boolean @default(false)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
 
   user User @relation(fields: [create_id], references: [id])
   create_id String
