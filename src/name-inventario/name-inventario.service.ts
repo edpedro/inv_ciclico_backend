@@ -90,6 +90,9 @@ export class NameInventarioService {
           },
         ],
       },
+      include: {
+        users: true,
+      },
     });
 
     if (!nameInv) {
@@ -110,20 +113,39 @@ export class NameInventarioService {
           id: id,
           create_id: req.user.id,
         },
+        include: {
+          users: true,
+        },
       });
 
       if (!nameInv) {
         throw new HttpException('Dados não encontrado', HttpStatus.BAD_REQUEST);
       }
 
-      return await this.prisma.baseNameInventario.update({
-        where: {
-          id: nameInv.id,
-        },
-        data: {
-          name: updateNameInventarioDto.name,
-          date: updateNameInventarioDto.date,
-        },
+      const { user_id } = updateNameInventarioDto;
+
+      await this.prisma.$transaction([
+        this.prisma.baseNameInventario.update({
+          where: { id: nameInv.id },
+          data: {
+            name: updateNameInventarioDto.name,
+            date: updateNameInventarioDto.date,
+          },
+        }),
+        this.prisma.nameInventarioOnUsers.deleteMany({
+          where: { nameInventario_id: nameInv.id },
+        }),
+        this.prisma.nameInventarioOnUsers.createMany({
+          data: user_id.map((user_id) => ({
+            nameInventario_id: nameInv.id,
+            user_id,
+            assignedBy: 'auth',
+          })),
+        }),
+      ]);
+
+      return await this.prisma.baseNameInventario.findFirst({
+        where: { id: nameInv.id },
       });
     } catch (error) {
       throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
