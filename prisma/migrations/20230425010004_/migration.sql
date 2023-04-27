@@ -21,6 +21,9 @@ CREATE TABLE "baseInventario" (
     "saldoWms" DOUBLE PRECISION NOT NULL,
     "saldoFisico" DOUBLE PRECISION,
     "status" BOOLEAN DEFAULT false,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "username_id" TEXT,
     "baseNameInventario_id" TEXT NOT NULL,
 
     CONSTRAINT "baseInventario_pkey" PRIMARY KEY ("id")
@@ -32,6 +35,8 @@ CREATE TABLE "baseNameInventario" (
     "date" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL DEFAULT false,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "create_id" TEXT NOT NULL,
 
     CONSTRAINT "baseNameInventario_pkey" PRIMARY KEY ("id")
@@ -46,6 +51,9 @@ CREATE TABLE "NameInventarioOnUsers" (
 
     CONSTRAINT "NameInventarioOnUsers_pkey" PRIMARY KEY ("user_id","nameInventario_id")
 );
+
+-- AddForeignKey
+ALTER TABLE "baseInventario" ADD CONSTRAINT "baseInventario_username_id_fkey" FOREIGN KEY ("username_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "baseInventario" ADD CONSTRAINT "baseInventario_baseNameInventario_id_fkey" FOREIGN KEY ("baseNameInventario_id") REFERENCES "baseNameInventario"("id") ON DELETE CASCADE ON UPDATE CASCADE;

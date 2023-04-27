@@ -15,15 +15,18 @@ model User {
   name       String
   username   String
   password   String
+  rules   String
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
   
+ 
   baseInventario BaseInventario[]
   baseNameInventario BaseNameInventario[]
   baseNameInventarios NameInventarioOnUsers[]
   
   @@map("users")
 }
+
 
 model BaseInventario {
   id        Int      @default(autoincrement()) @id

@@ -29,6 +29,7 @@ export class UsersService {
       select: {
         name: true,
         username: true,
+        rules: true,
       },
     });
   }
@@ -39,6 +40,7 @@ export class UsersService {
         id: true,
         name: true,
         username: true,
+        rules: true,
       },
     });
   }
@@ -64,6 +66,7 @@ export class UsersService {
       select: {
         name: true,
         username: true,
+        rules: true,
       },
     });
 
@@ -87,6 +90,7 @@ export class UsersService {
         select: {
           name: true,
           username: true,
+          rules: true,
         },
       });
     } catch (error) {
