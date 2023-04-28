@@ -78,6 +78,7 @@ export class UsersService {
   }
 
   async update(id: string, data: UpdateUserDto) {
+    const hashedPassword = await bcrypt.hashSync(data.password, 10);
     try {
       return await this.prisma.user.update({
         where: {
@@ -86,6 +87,8 @@ export class UsersService {
         data: {
           name: data.name,
           username: data.username,
+          password: hashedPassword,
+          rules: data.username,
         },
         select: {
           name: true,
