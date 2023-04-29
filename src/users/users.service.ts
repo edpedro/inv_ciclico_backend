@@ -78,18 +78,23 @@ export class UsersService {
   }
 
   async update(id: string, data: UpdateUserDto) {
-    const hashedPassword = await bcrypt.hashSync(data.password, 10);
     try {
+      const dataToUpdate: any = {
+        name: data.name,
+        username: data.username,
+        rules: data.rules,
+      };
+
+      if (data.password !== undefined && data.password !== null) {
+        const hashedPassword = await bcrypt.hashSync(data.password, 10);
+        dataToUpdate.password = hashedPassword;
+      }
+
       return await this.prisma.user.update({
         where: {
           id,
         },
-        data: {
-          name: data.name,
-          username: data.username,
-          password: hashedPassword,
-          rules: data.username,
-        },
+        data: dataToUpdate,
         select: {
           name: true,
           username: true,
@@ -97,6 +102,7 @@ export class UsersService {
         },
       });
     } catch (error) {
+      console.log(error);
       throw new HttpException('Usuario não atualizado', HttpStatus.BAD_REQUEST);
     }
   }
