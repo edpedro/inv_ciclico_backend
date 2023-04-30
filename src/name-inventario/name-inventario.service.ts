@@ -53,6 +53,7 @@ export class NameInventarioService {
       orderBy: {
         created_at: 'desc',
       },
+
       select: {
         id: true,
         date: true,
@@ -65,6 +66,7 @@ export class NameInventarioService {
             username: true,
           },
         },
+        users: true,
       },
     });
 
