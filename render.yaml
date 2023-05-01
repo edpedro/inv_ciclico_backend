@@ -1,0 +1,4 @@
+build:
+  - echo "Installing dependencies"
+  - npm install
+  - npm run build
