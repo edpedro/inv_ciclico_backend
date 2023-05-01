@@ -5,5 +5,7 @@ export class CreateUserDto {
 
   readonly password: string;
 
-  readonly rules: string;
+  readonly role: string;
+
+  readonly createdById?: string;
 }

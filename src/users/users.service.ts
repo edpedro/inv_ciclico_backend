@@ -25,11 +25,12 @@ export class UsersService {
       data: {
         ...data,
         password: hashedPassword,
+        createdById: data.createdById ? data.createdById : null,
       },
       select: {
         name: true,
         username: true,
-        rules: true,
+        role: true,
       },
     });
   }
@@ -40,7 +41,20 @@ export class UsersService {
         id: true,
         name: true,
         username: true,
-        rules: true,
+        role: true,
+      },
+    });
+  }
+  async findAllInvited(id: string) {
+    return await this.prisma.user.findMany({
+      where: {
+        createdById: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        role: true,
       },
     });
   }
@@ -66,7 +80,7 @@ export class UsersService {
       select: {
         name: true,
         username: true,
-        rules: true,
+        role: true,
       },
     });
 
@@ -82,7 +96,7 @@ export class UsersService {
       const dataToUpdate: any = {
         name: data.name,
         username: data.username,
-        rules: data.rules,
+        role: data.role,
       };
 
       if (data.password !== undefined && data.password !== null) {
@@ -98,7 +112,7 @@ export class UsersService {
         select: {
           name: true,
           username: true,
-          rules: true,
+          role: true,
         },
       });
     } catch (error) {

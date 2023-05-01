@@ -16,7 +16,7 @@ export class AuthService {
       sub: user.id,
       name: user.name,
       username: user.username,
-      rules: user.rules,
+      role: user.role,
     };
 
     return {

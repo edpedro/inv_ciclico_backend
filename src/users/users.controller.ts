@@ -25,6 +25,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('/invited/:id')
+  findAllId(@Param('id') id: string) {
+    return this.usersService.findAllInvited(id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
