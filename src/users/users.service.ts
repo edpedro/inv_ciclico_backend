@@ -129,6 +129,7 @@ export class UsersService {
         },
       });
     } catch (error) {
+      console.log(error.message);
       throw new HttpException('Usuario não deletado', HttpStatus.BAD_REQUEST);
     }
   }

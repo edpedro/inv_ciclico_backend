@@ -17,7 +17,7 @@ model User {
   updated_at DateTime? @default(now())
 
   createdById String?
-  createdBy  User?    @relation("CreatedByUser", fields: [createdById], references: [id])
+  createdBy  User?    @relation("CreatedByUser", fields: [createdById], references: [id], onUpdate: Cascade, onDelete: Cascade)
   createdUsers User[] @relation("CreatedByUser")
   
  
@@ -70,7 +70,7 @@ model BaseNameInventario {
 }
 
 model NameInventarioOnUsers {
-  user User @relation(fields: [user_id], references: [id], onUpdate: Cascade)
+  user User @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   user_id String
 
   nameInventario BaseNameInventario @relation(fields: [nameInventario_id], references: [id], onUpdate: Cascade)
