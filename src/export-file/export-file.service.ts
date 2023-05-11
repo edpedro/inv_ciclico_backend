@@ -33,7 +33,8 @@ export class ExportFileService {
         tipoEstoque: true,
         catItem: true,
         saldoWms: true,
-        saldoFisico: true,
+        firstCount: true,
+        secondCount: true,
       },
     });
 
