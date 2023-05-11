@@ -36,11 +36,9 @@ model BaseInventario {
   endereco   String
   tipoEstoque   String
   catItem   String
-  saldoWms    Float  
-  firstCount Float?  
-  secondCount Float? 
-  firstStatus Boolean? @default(false) 
-  secondStatus Boolean?  
+  saldoWms    Float
+  saldoFisico    Float?  
+  status   Boolean? @default(false)
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 

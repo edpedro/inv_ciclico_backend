@@ -103,17 +103,13 @@ export class BaseInventarioService {
 
       if (enderecoExistente) {
         enderecoExistente.item += 1;
-        enderecoExistente.firstStatus =
-          enderecoExistente.firstStatus && item.firstStatus;
-        enderecoExistente.se =
-          enderecoExistente.secondStatus && item.secondStatus;
+        enderecoExistente.status = enderecoExistente.status && item.status;
       } else {
         acc.push({
           id: item.id,
           endereco: item.endereco,
           item: 1,
-          firstStatus: item.firstStatus,
-          secondStatus: item.secondStatus,
+          status: item.status,
           baseNameInventario_id: item.baseNameInventario_id,
         });
       }
@@ -201,9 +197,13 @@ export class BaseInventarioService {
 
   async update(data: UpdateBaseInventarioDto, id: string, req: any) {
     try {
-      const nameInvExists = await this.prisma.nameInventarioOnUsers.findFirst({
+      const nameInvExists = await this.prisma.baseNameInventario.findFirst({
         where: {
-          user_id: req.user.id,
+          users: {
+            some: {
+              user_id: req.user.id,
+            },
+          },
         },
       });
 
@@ -221,75 +221,42 @@ export class BaseInventarioService {
       });
 
       if (!totalInvExists) {
-        throw new HttpException(
-          'Dados não encontrados',
-          HttpStatus.BAD_REQUEST,
-        );
+        throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
       }
 
-      if (totalInvExists.firstStatus === false) {
-        const secondStatus =
-          totalInvExists.saldoWms !== data.saldoFisico ? false : true;
-
-        await this.prisma.baseInventario.update({
-          where: {
-            id: totalInvExists.id,
-          },
-          data: {
-            firstCount: data.saldoFisico,
-            firstStatus: true,
-            secondStatus,
-            username_id: req.user.id,
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                username: true,
-              },
+      const result = await this.prisma.baseInventario.update({
+        where: {
+          id: totalInvExists.id,
+        },
+        data: {
+          ...data,
+          username_id: req.user.id,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
             },
           },
-        });
-      } else {
-        if (totalInvExists.secondStatus === false) {
-          await this.prisma.baseInventario.update({
-            where: {
-              id: totalInvExists.id,
-            },
-            data: {
-              secondCount: data.saldoFisico,
-              secondStatus: true,
-              username_id: req.user.id,
-            },
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  username: true,
-                },
-              },
-            },
-          });
-        }
-      }
+        },
+      });
 
       const inventarios = await this.prisma.baseInventario.findMany({
         where: {
           baseNameInventario_id: id,
         },
         select: {
-          firstStatus: true,
-          secondStatus: true,
+          status: true,
         },
       });
 
-      const result = inventarios.every((inventario) => {
-        return inventario.firstStatus && inventario.secondStatus;
-      });
+      const distinctStatus = inventarios
+        .map((inventario) => inventario.status)
+        .filter((value, index, array) => array.indexOf(value) === index);
 
-      if (result) {
+      if (distinctStatus.length === 1) {
         await this.prisma.baseNameInventario.update({
           where: {
             id,
@@ -299,6 +266,8 @@ export class BaseInventarioService {
           },
         });
       }
+
+      return result;
     } catch (error) {
       throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
     }

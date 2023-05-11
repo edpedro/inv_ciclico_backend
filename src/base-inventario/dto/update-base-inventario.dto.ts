@@ -6,4 +6,5 @@ export class UpdateBaseInventarioDto extends PartialType(
 ) {
   readonly id: number;
   readonly saldoFisico: number;
+  readonly status: boolean;
 }
