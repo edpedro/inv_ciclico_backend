@@ -33,7 +33,8 @@ export class ExportFileService {
         tipoEstoque: true,
         catItem: true,
         saldoWms: true,
-        saldoFisico: true,
+        firstCount: true,
+        secondCount: true,
       },
     });
 
@@ -41,7 +42,20 @@ export class ExportFileService {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
 
-    const ws = XLSX.utils.json_to_sheet(baseInvExists);
+    const renamedResults = baseInvExists.map((result) => {
+      return {
+        ['Item']: result.item,
+        ['Descricao']: result.descricao,
+        ['Endereco']: result.endereco,
+        ['Tip.Estoque']: result.tipoEstoque,
+        ['Cat.Item']: result.catItem,
+        ['Dispon.Exped.']: result.saldoWms,
+        ['Primeira Contagem']: result.firstCount,
+        ['Segunda Contagem']: result.secondCount,
+      };
+    });
+
+    const ws = XLSX.utils.json_to_sheet(renamedResults);
     const wb = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');

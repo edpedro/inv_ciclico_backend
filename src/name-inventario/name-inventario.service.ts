@@ -58,7 +58,8 @@ export class NameInventarioService {
         id: true,
         date: true,
         name: true,
-        status: true,
+        firstStatus: true,
+        secondStatus: true,
         user: {
           select: {
             id: true,

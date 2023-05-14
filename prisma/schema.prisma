@@ -36,9 +36,11 @@ model BaseInventario {
   endereco   String
   tipoEstoque   String
   catItem   String
-  saldoWms    Float
-  saldoFisico    Float?  
-  status   Boolean? @default(false)
+  saldoWms    Float  
+  firstCount Float?  
+  secondCount Float? 
+  firstStatus Boolean? @default(false) 
+  secondStatus Boolean?  
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
@@ -55,7 +57,8 @@ model BaseNameInventario {
   id    String      @id @default(uuid())  
   date String
   name String
-  status   Boolean @default(false)
+  firstStatus   Boolean @default(false)
+  secondStatus Boolean?  
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
