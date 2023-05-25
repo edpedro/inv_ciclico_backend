@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { BaseInventarioModule } from './base-inventario/base-inventario.module';
 import { NameInventarioModule } from './name-inventario/name-inventario.module';
 import { ExportFileModule } from './export-file/export-file.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ExportFileModule } from './export-file/export-file.module';
     BaseInventarioModule,
     NameInventarioModule,
     ExportFileModule,
+    DashboardModule,
   ],
   providers: [PrismaService],
 })
