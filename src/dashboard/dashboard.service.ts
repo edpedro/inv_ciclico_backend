@@ -32,126 +32,138 @@ export class DashboardService {
     });
 
     // Total Endereco
-    const totalEnd = removeDuplicatesEndereco.reduce((acc) => {
+    const totalEndereco = removeDuplicatesEndereco.reduce((acc) => {
       return acc + 1;
     }, 0);
 
     // Acuracidade
     //verificar se exister contagem 2, se sim passa para 1 contagem
-    //Total de 1 contagem
-    let totalFirstCount = 0;
-    const updatedArr = resultDash.map((value) => {
+
+    const updatedArr = removeDuplicatesEndereco.map((value) => {
       if (value.secondCount) {
         return { ...value, saldoTotal: value.secondCount };
       } else {
-        totalFirstCount += 1;
         return { ...value, saldoTotal: value.firstCount };
       }
     });
 
     // somando valor do WMS com total das contagens
-    const { totalSumWms, totalSumCount } = updatedArr.reduce(
+    const { totalSomaWms, totalSomaContagem } = updatedArr.reduce(
       (accumulator, currentValue) => {
         return {
-          totalSumWms: accumulator.totalSumWms + currentValue.saldoWms,
-          totalSumCount: accumulator.totalSumCount + currentValue.saldoTotal,
+          totalSomaWms: accumulator.totalSomaWms + currentValue.saldoWms,
+          totalSomaContagem:
+            accumulator.totalSomaContagem + currentValue.saldoTotal,
         };
       },
-      { totalSumWms: 0, totalSumCount: 0 },
+      { totalSomaWms: 0, totalSomaContagem: 0 },
     );
 
-    let pocen = 0;
+    let pocentagem = 0;
     // pocentagem
-    if (totalSumWms >= totalSumCount) {
-      pocen = (totalSumCount / totalSumWms) * 100;
+    if (totalSomaWms >= totalSomaContagem) {
+      pocentagem = (totalSomaContagem / totalSomaWms) * 100;
     } else {
-      pocen = (totalSumWms / totalSumCount) * 100;
+      pocentagem = (totalSomaWms / totalSomaContagem) * 100;
     }
-    const acurac = pocen.toFixed(2);
+    const acuracidade = pocentagem.toFixed(2);
 
     // total de 2 segunda contagem
-    let totalSecondCount = 0;
+    let totalSegundaContagem = 0;
+    //Total de 1 contagem
+    let totalPrimeiraContagem = 0;
+
     resultDash.forEach((value) => {
-      if (value.secondCount) {
-        totalSecondCount += 1;
+      if (value.secondCount !== null) {
+        totalSegundaContagem = totalSegundaContagem + 1;
       }
-      return totalSecondCount;
+      if (value.firstCount !== null) {
+        totalPrimeiraContagem = totalPrimeiraContagem + 1;
+      }
     });
 
     //Total de Falta e Sobra
-    let totalFalt = 0;
-    let totalSobr = 0;
+    let totalFalta = 0;
+    let totalSobra = 0;
 
-    resultDash.forEach((value) => {
-      if (value.secondCount) {
-        if (value.secondCount > value.saldoWms) {
-          totalSobr += value.secondCount - value.saldoWms;
-        } else if (value.secondCount < value.saldoWms) {
-          totalFalt += value.saldoWms - value.secondCount;
+    resultDash.forEach((inv) => {
+      if (inv.secondCount !== null) {
+        const saldo = inv.secondCount - inv.saldoWms;
+
+        if (saldo > 0) {
+          totalSobra += saldo;
+        } else if (saldo < 0) {
+          totalFalta += Math.abs(saldo);
         }
       } else {
-        if (value.firstCount > value.saldoWms) {
-          totalSobr += value.firstCount - value.saldoWms;
-        } else if (value.firstCount < value.saldoWms) {
-          totalFalt += value.saldoWms - value.firstCount;
+        if (inv.firstCount !== null) {
+          const saldo = inv.firstCount - inv.saldoWms;
+
+          if (saldo > 0) {
+            totalSobra += saldo;
+          } else if (saldo < 0) {
+            totalFalta += Math.abs(saldo);
+          }
         }
       }
-      return totalSecondCount;
     });
 
     //soma total de divergencias
-    const totalSumDivergencias = totalFalt + totalSobr;
+    const totalSomaDivergencias = totalFalta + totalSobra;
 
     //Total de Divergencia e Acertos
-    let totalDiv = 0;
-    let totalAcert = 0;
+    let totalDivergencia = 0;
+    let totalAcertos = 0;
 
     resultDash.forEach((value) => {
-      if (value.secondCount) {
+      if (value.secondCount !== null) {
         if (
           value.secondCount > value.saldoWms ||
           value.secondCount < value.saldoWms
         ) {
-          totalDiv = totalDiv + 1;
+          totalDivergencia = totalDivergencia + 1;
+        } else if (value.secondCount === value.saldoWms) {
+          totalAcertos = totalAcertos + 1;
         }
-      } else {
-        totalAcert = totalAcert + 1;
+      } else if (value.firstCount === value.saldoWms) {
+        totalAcertos = totalAcertos + 1;
       }
-      return totalSecondCount;
     });
+
+    totalAcertos = totalAcertos - totalDivergencia;
 
     //Evolução 1 contagem
-    let evoluEndFristCount = 0;
+    let evoluc = 0;
 
     removeDuplicatesEndereco.forEach((value) => {
-      if (value.endereco) {
-        evoluEndFristCount = evoluEndFristCount + 1;
+      if (value.firstCount !== null) {
+        evoluc = evoluc + 1;
       }
     });
 
-    let evoluc = 0;
+    let evolucao = 0;
     // pocentagem
-    if (totalEnd >= evoluEndFristCount) {
-      evoluc = (evoluEndFristCount / totalEnd) * 100;
+    if (totalEndereco >= evoluc) {
+      evolucao = (evoluc / totalEndereco) * 100;
     } else {
-      evoluc = (totalEnd / evoluEndFristCount) * 100;
+      evolucao = (totalEndereco / evoluc) * 100;
     }
-    const evoluEndFrist = evoluc.toFixed(2);
+    const evolucaoContagem = evolucao.toFixed(2);
 
     return {
       totalSKU,
-      totalEnd,
-      acurac,
-      totalSecondCount,
-      totalFirstCount,
-      totalSumDivergencias,
-      totalSumWms,
-      totalSumCount,
-      totalFalt,
-      totalSobr,
-      totalDiv,
-      totalAcert,
-      evoluEndFrist,
+      totalEndereco,
+      acuracidade,
+      totalSegundaContagem,
+      totalPrimeiraContagem,
+      totalSomaDivergencias,
+      totalSomaWms,
+      totalSomaContagem,
+      totalFalta,
+      totalSobra,
+      totalDivergencia,
+      totalAcertos,
+      evolucaoContagem,
     };
   }
 }
