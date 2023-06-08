@@ -141,8 +141,7 @@ export class DashboardService {
 
     let totalDivergencia = uniqueArrayDivergencia.length;
     let totalAcertos = uniqueArrayAcertos.length;
-
-    totalAcertos = totalAcertos - totalDivergencia;
+    console.log(uniqueArrayAcertos);
 
     //Evolução 1 contagem
     let evoluc = 0;
