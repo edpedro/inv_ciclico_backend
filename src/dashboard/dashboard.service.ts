@@ -112,23 +112,35 @@ export class DashboardService {
     const totalSomaDivergencias = totalFalta + totalSobra;
 
     //Total de Divergencia e Acertos
-    let totalDivergencia = 0;
-    let totalAcertos = 0;
+    const acertosArray = [];
+    const divergenciaArray = [];
 
     resultDash.forEach((value) => {
-      if (value.secondCount !== null) {
+      if (value.secondCount) {
         if (
           value.secondCount > value.saldoWms ||
           value.secondCount < value.saldoWms
         ) {
-          totalDivergencia = totalDivergencia + 1;
+          divergenciaArray.push(value.item);
         } else if (value.secondCount === value.saldoWms) {
-          totalAcertos = totalAcertos + 1;
+          acertosArray.push(value.item);
         }
       } else if (value.firstCount === value.saldoWms) {
-        totalAcertos = totalAcertos + 1;
+        acertosArray.push(value.item);
       }
     });
+    const uniqueArrayAcertos = acertosArray.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+
+    const uniqueArrayDivergencia = divergenciaArray.filter(
+      (value, index, self) => {
+        return self.indexOf(value) === index;
+      },
+    );
+
+    let totalDivergencia = uniqueArrayDivergencia.length;
+    let totalAcertos = uniqueArrayAcertos.length;
 
     totalAcertos = totalAcertos - totalDivergencia;
 
