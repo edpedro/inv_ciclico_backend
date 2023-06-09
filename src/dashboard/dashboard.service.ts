@@ -112,7 +112,6 @@ export class DashboardService {
     const totalSomaDivergencias = totalFalta + totalSobra;
 
     //Total de Divergencia e Acertos
-    const acertosArray = [];
     const divergenciaArray = [];
 
     resultDash.forEach((value) => {
@@ -122,15 +121,8 @@ export class DashboardService {
           value.secondCount < value.saldoWms
         ) {
           divergenciaArray.push(value.item);
-        } else if (value.secondCount === value.saldoWms) {
-          acertosArray.push(value.item);
         }
-      } else if (value.firstCount === value.saldoWms) {
-        acertosArray.push(value.item);
       }
-    });
-    const uniqueArrayAcertos = acertosArray.filter((value, index, self) => {
-      return self.indexOf(value) === index;
     });
 
     const uniqueArrayDivergencia = divergenciaArray.filter(
@@ -140,8 +132,7 @@ export class DashboardService {
     );
 
     let totalDivergencia = uniqueArrayDivergencia.length;
-    let totalAcertos = uniqueArrayAcertos.length;
-    console.log(uniqueArrayAcertos);
+    let totalAcertos = totalSKU - totalDivergencia;
 
     //Evolução 1 contagem
     let evoluc = 0;
