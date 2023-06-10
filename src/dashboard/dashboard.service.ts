@@ -36,38 +36,6 @@ export class DashboardService {
       return acc + 1;
     }, 0);
 
-    // Acuracidade
-    //verificar se exister contagem 2, se sim passa para 1 contagem
-
-    const updatedArr = removeDuplicatesEndereco.map((value) => {
-      if (value.secondCount) {
-        return { ...value, saldoTotal: value.secondCount };
-      } else {
-        return { ...value, saldoTotal: value.firstCount };
-      }
-    });
-
-    // somando valor do WMS com total das contagens
-    const { totalSomaWms, totalSomaContagem } = updatedArr.reduce(
-      (accumulator, currentValue) => {
-        return {
-          totalSomaWms: accumulator.totalSomaWms + currentValue.saldoWms,
-          totalSomaContagem:
-            accumulator.totalSomaContagem + currentValue.saldoTotal,
-        };
-      },
-      { totalSomaWms: 0, totalSomaContagem: 0 },
-    );
-
-    let pocentagem = 0;
-    // pocentagem
-    if (totalSomaWms >= totalSomaContagem) {
-      pocentagem = (totalSomaContagem / totalSomaWms) * 100;
-    } else {
-      pocentagem = (totalSomaWms / totalSomaContagem) * 100;
-    }
-    const acuracidade = pocentagem.toFixed(2);
-
     // total de 2 segunda contagem
     let totalSegundaContagem = 0;
     //Total de 1 contagem
@@ -143,6 +111,44 @@ export class DashboardService {
       }
     });
 
+    // Acuracidade
+    //verificar se exister contagem 2, se sim passa para 1 contagem
+    const updatedArr = resultDash.map((value) => {
+      if (value.secondCount) {
+        return { ...value, saldoTotal: value.secondCount };
+      } else {
+        return { ...value, saldoTotal: value.firstCount };
+      }
+    });
+
+    // somando valor do WMS com total das contagens
+    const { totalSomaWms, totalSomaContagem } = updatedArr.reduce(
+      (accumulator, currentValue) => {
+        return {
+          totalSomaWms: accumulator.totalSomaWms + currentValue.saldoWms,
+          totalSomaContagem:
+            accumulator.totalSomaContagem + currentValue.saldoTotal,
+        };
+      },
+      { totalSomaWms: 0, totalSomaContagem: 0 },
+    );
+
+    //Pocentagem
+    let porcentagem = 0;
+
+    if (totalSomaWms >= totalSomaContagem) {
+      porcentagem = (totalSomaContagem / totalSomaWms) * 100;
+    } else {
+      porcentagem = (totalSomaWms / totalSomaContagem) * 100;
+    }
+
+    let acuracidade = Math.floor(porcentagem * 100) / 100;
+
+    if (totalDivergencia > 0 && acuracidade === 100) {
+      acuracidade = 99.99;
+    }
+
+    //Evolução
     let evolucao = 0;
     // pocentagem
     if (totalEndereco >= evoluc) {
