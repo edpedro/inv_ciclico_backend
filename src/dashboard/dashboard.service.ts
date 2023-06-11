@@ -1,4 +1,9 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -11,6 +16,10 @@ export class DashboardService {
     const resultDash = await this.prisma.baseInventario.findMany({
       where: { baseNameInventario_id: id },
     });
+
+    if (resultDash.length <= 0) {
+      throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
+    }
 
     //Remove Duplicados item
     const removeDuplicatesItem = Array.from(
