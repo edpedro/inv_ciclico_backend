@@ -64,4 +64,17 @@ export class BaseInventarioController {
   ) {
     return await this.baseInventarioService.update(data, id, req);
   }
+
+  @Patch('second/:id')
+  async updateItemSecondCount(
+    @Body() data: UpdateBaseInventarioDto,
+    @Param('id') id: string,
+    @Req() req: any,
+  ) {
+    return await this.baseInventarioService.updateAdminSecondCount(
+      data,
+      id,
+      req,
+    );
+  }
 }

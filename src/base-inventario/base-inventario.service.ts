@@ -325,4 +325,73 @@ export class BaseInventarioService {
       throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
     }
   }
+
+  async updateAdminSecondCount(
+    data: UpdateBaseInventarioDto,
+    id: string,
+    req: any,
+  ) {
+    try {
+      const nameInvExists = await this.prisma.baseNameInventario.findFirst({
+        where: {
+          create_id: req.user.id,
+        },
+      });
+
+      if (!nameInvExists) {
+        throw new HttpException(
+          'Dados não encontrados',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const totalInvExists = await this.prisma.baseInventario.findUnique({
+        where: {
+          id: data.id,
+        },
+      });
+
+      if (!totalInvExists) {
+        throw new HttpException(
+          'Dados não encontrados',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      let newData: CreateBaseInventarioDto;
+
+      if (totalInvExists.secondStatus !== true) {
+        throw new HttpException(
+          'Atualização não autorizada',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (totalInvExists.secondStatus === true) {
+        const updateSecond = await this.prisma.baseInventario.update({
+          where: {
+            id: totalInvExists.id,
+          },
+          data: {
+            secondCount: data.saldoFisico,
+            username_id: req.user.id,
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+              },
+            },
+          },
+        });
+        newData = updateSecond;
+      }
+
+      return newData;
+    } catch (error) {
+      throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
+    }
+  }
 }
