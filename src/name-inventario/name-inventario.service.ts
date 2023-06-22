@@ -11,6 +11,7 @@ export class NameInventarioService {
     const nameExist = await this.prisma.baseNameInventario.findFirst({
       where: {
         name: data.name,
+        create_id: req.user.id,
       },
     });
 

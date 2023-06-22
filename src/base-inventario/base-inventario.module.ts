@@ -6,5 +6,6 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Module({
   controllers: [BaseInventarioController],
   providers: [PrismaService, BaseInventarioService],
+  exports: [BaseInventarioService],
 })
 export class BaseInventarioModule {}
