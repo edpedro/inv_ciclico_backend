@@ -68,7 +68,7 @@ export class PointsService {
 
     const user = await this.usersService.findAllInvited(id);
 
-    const novoArray = user.map((userData) => {
+    const pointsArray = user.map((userData) => {
       const totalSKU = baseInvExists.reduce((acc, baseData) => {
         if (baseData.username_id === userData.id) {
           return acc + 1;
@@ -123,6 +123,10 @@ export class PointsService {
       };
     });
 
-    return novoArray;
+    pointsArray.sort((a, b) => {
+      return b.totalPoints - a.totalPoints;
+    });
+
+    return pointsArray;
   }
 }
