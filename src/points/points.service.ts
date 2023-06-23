@@ -115,7 +115,10 @@ export class PointsService {
       const totalPoints = totalAcertos - totalSegundaContagem;
 
       return {
-        userData,
+        id: userData.id,
+        name: userData.name,
+        username: userData.username,
+        role: userData.role,
         totalPoints,
       };
     });
