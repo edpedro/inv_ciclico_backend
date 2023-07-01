@@ -92,11 +92,19 @@ export class DashboardService {
     const divergenciaArray = [];
 
     resultDash.forEach((value) => {
-      if (value.secondCount) {
+      if (value.secondStatus === false && value.firstStatus === true) {
         if (
           value.secondCount > value.saldoWms ||
           value.secondCount < value.saldoWms
         ) {
+          divergenciaArray.push(value.item);
+        }
+      }
+
+      if (value.secondStatus === true && value.firstStatus === true) {
+        if (value.secondCount === value.saldoWms) {
+          divergenciaArray.push();
+        } else if (value.firstCount !== value.saldoWms) {
           divergenciaArray.push(value.item);
         }
       }
@@ -107,9 +115,16 @@ export class DashboardService {
         return self.indexOf(value) === index;
       },
     );
+    let totalSKUAcertos = 0;
+
+    resultDash.forEach((value) => {
+      if (value.firstCount !== null) {
+        totalSKUAcertos = totalSKUAcertos + 1;
+      }
+    });
 
     let totalDivergencia = uniqueArrayDivergencia.length;
-    let totalAcertos = totalSKU - totalDivergencia;
+    let totalAcertos = totalSKUAcertos - totalDivergencia;
 
     //Evolução 1 contagem
     let evoluc = 0;
