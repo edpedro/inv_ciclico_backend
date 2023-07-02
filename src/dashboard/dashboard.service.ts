@@ -115,16 +115,20 @@ export class DashboardService {
         return self.indexOf(value) === index;
       },
     );
-    let totalSKUAcertos = 0;
+    let totalSKUAcertos = [];
 
     resultDash.forEach((value) => {
       if (value.firstCount !== null) {
-        totalSKUAcertos = totalSKUAcertos + 1;
+        totalSKUAcertos.push(value.item);
       }
     });
 
+    const uniqueArrayAcertos = totalSKUAcertos.filter((value, index, self) => {
+      return self.indexOf(value) === index;
+    });
+
     let totalDivergencia = uniqueArrayDivergencia.length;
-    let totalAcertos = totalSKUAcertos - totalDivergencia;
+    let totalAcertos = uniqueArrayAcertos.length - totalDivergencia;
 
     //Evolução 1 contagem
     let evoluc = 0;
