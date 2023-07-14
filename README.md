@@ -1,73 +1,28 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Sistema de Inventário com NestJS
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este projeto foi criado para resolver um problema de gerenciamento de inventário onde eu trabalho. Anteriormente, o inventário era gerenciado usando planilhas do Excel, o que era ineficiente e propenso a erros. Este sistema foi criado para automatizar o processo e torná-lo mais eficiente
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Funcionalidades
 
-## Description
+- Exportar para Excel
+  O usuário tem a opção de exportar os dados do inventário para um arquivo Excel. Isso permite que as informações sejam facilmente compartilhadas ou importadas para outros sistemas.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Importar do Excel
+  Os usuários podem fazer upload de um arquivo Excel contendo os dados do inventário. O sistema processará o arquivo e atualizará o inventário com as informações fornecidas.
 
-## Installation
+- Dashboard
+  O sistema apresenta um painel de controle (dashboard) que fornece uma visão geral das informações do inventário. O dashboard exibe estatísticas e gráficos relevantes para facilitar a análise dos dados.
 
-```bash
-$ npm install
-```
+- Sistema de Pontos
+  Implementamos um sistema de pontos para incentivar os usuários a realizar o inventário com precisão e eficiência. Cada usuário recebe pontos com base na acurácia das contagens realizadas. Isso promove a responsabilidade e a precisão nas atividades de inventário.
 
-## Running the app
+- Pesquisa
+  Os usuários podem pesquisar materiais, descrições e endereços específicos no sistema de inventário. Isso facilita a localização de itens específicos e agiliza o processo de consulta de informações.
 
-```bash
-# development
-$ npm run start
+## Variáveis de Ambiente
 
-# watch mode
-$ npm run start:dev
+Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
 
-# production mode
-$ npm run start:prod
-```
+`SECRET_KEY`
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+`DATABASE_URL`

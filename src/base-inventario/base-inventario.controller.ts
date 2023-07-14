@@ -17,7 +17,9 @@ import { multerOptions, UploadDto } from 'src/utils/file-upload.dto';
 import { BaseInventarioService } from './base-inventario.service';
 import { ListEnderecoDto } from './dto/list-endereco.dto';
 import { ListItemDto } from './dto/list-item.dto';
-import { UpdateBaseInventarioDto } from './dto/update-base-inventario.dto';
+import { UpdateBaseInventarioDto } from './dto/update-base-inventario.dto copy';
+import { UpdateWmsInventarioDto } from './dto/update-wms-inventario.dto';
+import { ListItemHistoricoDto } from './dto/list-historico.item.dto copy';
 
 @Controller('ciclico')
 @UseGuards(AuthGuard('jwt'))
@@ -42,6 +44,14 @@ export class BaseInventarioController {
   @Get('endereco/:id')
   async totalEndereco(@Param('id') id: string) {
     return await this.baseInventarioService.listTotalEndereco(id);
+  }
+  @Get('historico/:id')
+  async historicoItem(
+    @Body() data: ListItemHistoricoDto,
+    @Param('id') id: string,
+    @Req() req: any,
+  ) {
+    return await this.baseInventarioService.historicoGetItemAll(data, id, req);
   }
   @Delete('endereco/:id')
   async removeInv(@Param('id') id: string, @Req() req: any) {
@@ -76,5 +86,14 @@ export class BaseInventarioController {
       id,
       req,
     );
+  }
+
+  @Patch('wms/:id')
+  async updateItemWms(
+    @Body() data: UpdateWmsInventarioDto,
+    @Param('id') id: string,
+    @Req() req: any,
+  ) {
+    return await this.baseInventarioService.updateAdminWMS(data, id, req);
   }
 }
