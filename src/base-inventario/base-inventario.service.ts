@@ -448,21 +448,8 @@ export class BaseInventarioService {
     }
   }
 
-  async historicoGetItemAll(data: ListItemHistoricoDto, id: string, req: any) {
+  async historicoGetItemAll(data: ListItemHistoricoDto) {
     try {
-      const nameInvExists = await this.prisma.baseNameInventario.findFirst({
-        where: {
-          create_id: req.user.id,
-        },
-      });
-
-      if (!nameInvExists) {
-        throw new HttpException(
-          'Atualização não autorizada',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
       const totalInvExists = await this.prisma.baseInventario.findMany({
         where: {
           item: data.item,
@@ -472,6 +459,13 @@ export class BaseInventarioService {
             select: {
               name: true,
               date: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
             },
           },
         },

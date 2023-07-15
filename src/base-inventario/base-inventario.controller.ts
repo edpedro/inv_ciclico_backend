@@ -45,13 +45,9 @@ export class BaseInventarioController {
   async totalEndereco(@Param('id') id: string) {
     return await this.baseInventarioService.listTotalEndereco(id);
   }
-  @Get('historico/:id')
-  async historicoItem(
-    @Body() data: ListItemHistoricoDto,
-    @Param('id') id: string,
-    @Req() req: any,
-  ) {
-    return await this.baseInventarioService.historicoGetItemAll(data, id, req);
+  @Post('historico')
+  async historicoItem(@Body() data: ListItemHistoricoDto) {
+    return await this.baseInventarioService.historicoGetItemAll(data);
   }
   @Delete('endereco/:id')
   async removeInv(@Param('id') id: string, @Req() req: any) {
