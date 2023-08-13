@@ -188,4 +188,34 @@ export class NameInventarioService {
       throw new HttpException('Dados não deletado', HttpStatus.BAD_REQUEST);
     }
   }
+
+  async findAllDash() {
+    const nameInv = await this.prisma.baseNameInventario.findMany({
+      orderBy: {
+        created_at: 'desc',
+      },
+
+      select: {
+        id: true,
+        date: true,
+        name: true,
+        firstStatus: true,
+        secondStatus: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
+        users: true,
+      },
+    });
+
+    if (!nameInv) {
+      throw new HttpException('Dados não encontrado', HttpStatus.BAD_REQUEST);
+    }
+
+    return nameInv;
+  }
 }
