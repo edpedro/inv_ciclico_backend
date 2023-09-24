@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -66,7 +66,7 @@ export class PointsService {
 
     const baseInvExists = await this.prisma.baseInventario.findMany();
 
-    const user = await this.usersService.findAllInvited(id);
+    const user = await this.usersService.findAllUsersInvited(id);
 
     const pointsArray = user.map((userData) => {
       const totalSKU = baseInvExists.reduce((acc, baseData) => {

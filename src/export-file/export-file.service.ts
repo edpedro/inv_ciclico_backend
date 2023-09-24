@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as XLSX from 'xlsx';
 import { join } from 'path';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 
 @Injectable()
 export class ExportFileService {
@@ -46,7 +46,7 @@ export class ExportFileService {
     if (baseInvExists.length <= 0) {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
-    const user = await this.usersService.findAll();
+    const user = await this.usersService.findAllUsers();
 
     const sheetResult = baseInvExists.map((inv) => {
       const userMatch = user.find((u) => u.id === inv.username_id);

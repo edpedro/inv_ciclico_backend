@@ -14,7 +14,7 @@ export class CreateUserDto {
   readonly password: string;
 
   @IsString({ message: "O campo 'role' deve ser uma string." })
-  @IsNotEmpty({ message: "O campo 'role' não pode estar vazio." })
+  @IsOptional()
   readonly role: string;
 
   @IsString({ message: "O campo 'createdById' deve ser uma string." })
