@@ -14,7 +14,7 @@ export class CreateNameInventarioDto {
     each: true,
     message: 'Cada elemento da lista deve ser uma string.',
   })
-  readonly user_id: string[];
+  readonly user_id?: string[];
 
   @IsOptional()
   @IsBoolean({ message: "O campo 'Staus' deve ser uma boolean." })

@@ -1,3 +1,4 @@
+import { ListUsersIdsUseCase } from './../usecases/list-users-ids.usecase';
 import { DeleteUserUseCase } from './../usecases/delete-user.usecase';
 import { UpdateUserUseCase } from './../usecases/update-user.usecase';
 import { ListUserUsernameUseCase } from './../usecases/list-user-username.usecase';
@@ -21,6 +22,7 @@ export class UsersService {
     private readonly listUserUsernameUseCase: ListUserUsernameUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
+    private readonly listUsersIdsUseCase: ListUsersIdsUseCase,
   ) {}
 
   async createUser(data: CreateUserDto): Promise<UserDto> {
@@ -57,6 +59,16 @@ export class UsersService {
 
   async findOne(id: string) {
     const userExist = await this.listUserOneUseCase.execute(id);
+
+    if (!userExist) {
+      throw new HttpException('Usuario não encontrado', HttpStatus.BAD_REQUEST);
+    }
+
+    return userExist;
+  }
+
+  async getUsersByIds(user_id: string[]) {
+    const userExist = await this.listUsersIdsUseCase.execute(user_id);
 
     if (!userExist) {
       throw new HttpException('Usuario não encontrado', HttpStatus.BAD_REQUEST);

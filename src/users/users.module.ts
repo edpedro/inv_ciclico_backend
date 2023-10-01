@@ -10,6 +10,7 @@ import { ListUserOneUseCase } from './usecases/list-user-one.usecase';
 import { UpdateUserUseCase } from './usecases/update-user.usecase';
 import { ListUserUsernameUseCase } from './usecases/list-user-username.usecase';
 import { DeleteUserUseCase } from './usecases/delete-user.usecase';
+import { ListUsersIdsUseCase } from './usecases/list-users-ids.usecase';
 
 @Module({
   controllers: [UsersController],
@@ -24,6 +25,7 @@ import { DeleteUserUseCase } from './usecases/delete-user.usecase';
     UpdateUserUseCase,
     ListUserUsernameUseCase,
     DeleteUserUseCase,
+    ListUsersIdsUseCase,
   ],
   exports: [UsersService],
 })

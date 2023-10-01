@@ -1,4 +1,3 @@
-import { CreateNameInventarioDto } from './dto/create-name-inventario.dto';
 import {
   Controller,
   Get,
@@ -10,9 +9,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { NameInventarioService } from './name-inventario.service';
-import { UpdateNameInventarioDto } from './dto/update-name-inventario.dto';
+
 import { AuthGuard } from '@nestjs/passport';
+import { NameInventarioService } from '../service/nameInventarioService';
+import { CreateNameInventarioDto } from '../dto/create-name-inventario.dto';
+import { UpdateNameInventarioDto } from '../dto/update-name-inventario.dto';
 
 @Controller('nameinv')
 export class NameInventarioController {
@@ -21,13 +22,13 @@ export class NameInventarioController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   create(@Body() data: CreateNameInventarioDto, @Req() req: any) {
-    return this.nameInventarioService.create(data, req);
+    return this.nameInventarioService.createName(data, req);
   }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  findAll(@Req() req: any) {
-    return this.nameInventarioService.findAll(req);
+  findAllName(@Req() req: any) {
+    return this.nameInventarioService.findAllName(req);
   }
 
   @Get('/dash')
@@ -37,23 +38,23 @@ export class NameInventarioController {
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id') id: string, @Req() req: any) {
-    return this.nameInventarioService.findOne(id, req);
+  findIdName(@Param('id') id: string, @Req() req: any) {
+    return this.nameInventarioService.findIdName(id, req);
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
   update(
     @Param('id') id: string,
-    @Body() updateNameInventarioDto: UpdateNameInventarioDto,
+    @Body() data: UpdateNameInventarioDto,
     @Req() req: any,
   ) {
-    return this.nameInventarioService.update(id, updateNameInventarioDto, req);
+    return this.nameInventarioService.updateName(id, data, req);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string, @Req() req: any) {
-    return this.nameInventarioService.remove(id, req);
+    return this.nameInventarioService.removeName(id, req);
   }
 }
