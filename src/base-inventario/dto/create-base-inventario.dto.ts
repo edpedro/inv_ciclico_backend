@@ -31,7 +31,7 @@ export class CreateBaseInventarioDto {
   @IsNotEmpty({ message: "O campo 'Saldo WMS' não pode estar vazio." })
   readonly saldoWms: number;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
   readonly saldoFisico?: number;
 
