@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/service/users.service';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserDto } from 'src/users/dto/user.dto';
+import { ListUserUsernameUseCase } from 'src/users/usecases/list-user-username.usecase';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly listUserUsernameUseCase: ListUserUsernameUseCase,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -29,8 +29,12 @@ export class AuthService {
   async validateUser(username: string, password: string) {
     let user: CreateUserDto;
     try {
-      user = await this.usersService.FindUsername({ username });
+      user = await this.listUserUsernameUseCase.execute(username);
     } catch (error) {
+      return null;
+    }
+
+    if (!user) {
       return null;
     }
 
