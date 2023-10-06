@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateExportFileDto } from './create-export-file.dto';
+import { ListExportFileDto } from './list-export-file.dto';
 
-export class UpdateExportFileDto extends PartialType(CreateExportFileDto) {}
+export class UpdateExportFileDto extends PartialType(ListExportFileDto) {}

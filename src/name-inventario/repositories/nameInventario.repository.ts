@@ -153,4 +153,12 @@ export class NameInventarioRepository {
       data: user_ids,
     });
   }
+
+  async findOneNameInventario(id: string): Promise<ListNameInventarioDto> {
+    return await this.prisma.baseNameInventario.findFirst({
+      where: {
+        id: id,
+      },
+    });
+  }
 }

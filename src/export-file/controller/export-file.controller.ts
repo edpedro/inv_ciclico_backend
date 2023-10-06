@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Req, Res, UseGuards } from '@nestjs/common';
-import { ExportFileService } from './export-file.service';
+import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
+import { ExportFileService } from '../service/export-file.service';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 

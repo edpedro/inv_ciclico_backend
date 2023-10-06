@@ -1,4 +1,4 @@
-export class ListBaseInventarioDto {
+export class ListExportFileDto {
   readonly item: string;
   readonly descricao: string;
   readonly endereco: string;
@@ -10,6 +10,5 @@ export class ListBaseInventarioDto {
   readonly secondCount: number;
   readonly firstStatus?: boolean;
   readonly secondStatus?: boolean;
-  readonly baseNameInventario_id?: string;
   readonly username_id?: string;
 }
