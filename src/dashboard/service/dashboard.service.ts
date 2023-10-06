@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DashboardCreate } from '../utils/dashboard/index';
+import { DashboardCreate } from '../../utils/dashboard/index';
 
 @Injectable()
 @UseGuards(AuthGuard('jwt'))
@@ -14,6 +14,7 @@ export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findIdInve(id: string) {
+    //Implementacao usecase baseInventario
     const resultDash = await this.prisma.baseInventario.findMany({
       where: { baseNameInventario_id: id },
     });

@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { DashboardService } from './dashboard.service';
+import { DashboardService } from '../service/dashboard.service';
 
 @Controller('dashboard')
 export class DashboardController {
