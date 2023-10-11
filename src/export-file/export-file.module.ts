@@ -1,5 +1,5 @@
 import { ListOneInventarioUseCase } from './../name-inventario/usecases/list-one-nameInventario.usecase';
-import { NameInventarioRepository } from './../name-inventario/repositories/nameInventario.repository';
+import { NameInventarioRepository } from './../name-inventario/repositories/name-inventario.repository';
 import { Module } from '@nestjs/common';
 import { ExportFileService } from './service/export-file.service';
 import { ExportFileController } from './controller/export-file.controller';

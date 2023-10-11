@@ -1,7 +1,7 @@
-import { NameInventarioRepository } from './repositories/nameInventario.repository';
+import { NameInventarioRepository } from './repositories/name-inventario.repository';
 import { Module } from '@nestjs/common';
-import { NameInventarioService } from './service/nameInventarioService';
-import { NameInventarioController } from './controller/nameInventarioController';
+import { NameInventarioService } from './service/name-inventarioService';
+import { NameInventarioController } from './controller/name-inventarioController';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateNameInventarioUseCase } from './usecases/create-nameInventario.usecase';
 import { UsersModule } from 'src/users/users.module';

@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ListOneNameBaseInventarioUseCase } from 'src/name-inventario/usecases/list-base-nameInventario.usecase';
 import { ListBaseInventarioUseCase } from './usecases/list-base-inventario.usecase';
 import { CreateBaseInventarioUseCase } from './usecases/create-base-inventario.usecase';
-import { NameInventarioRepository } from 'src/name-inventario/repositories/nameInventario.repository';
+import { NameInventarioRepository } from 'src/name-inventario/repositories/name-inventario.repository';
 import { BaseInventarioRepository } from './repositories/base-inventario.repository';
 import { ListAllBaseInventarioUseCase } from './usecases/list-all-inventario.usecase';
 import { ListEnderecoBaseInventarioUseCase } from './usecases/list-endereco-inventario.usecase';

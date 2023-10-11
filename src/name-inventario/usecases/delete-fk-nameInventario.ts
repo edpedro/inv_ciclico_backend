@@ -1,4 +1,4 @@
-import { NameInventarioRepository } from './../repositories/nameInventario.repository';
+import { NameInventarioRepository } from './../repositories/name-inventario.repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

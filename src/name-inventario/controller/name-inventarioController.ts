@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 
 import { AuthGuard } from '@nestjs/passport';
-import { NameInventarioService } from '../service/nameInventarioService';
+import { NameInventarioService } from '../service/name-inventarioService';
 import { CreateNameInventarioDto } from '../dto/create-name-inventario.dto';
 import { UpdateNameInventarioDto } from '../dto/update-name-inventario.dto';
 
