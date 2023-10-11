@@ -1,4 +1,5 @@
 export class ListBaseInventarioDto {
+  readonly id?: number;
   readonly item: string;
   readonly descricao: string;
   readonly endereco: string;

@@ -161,4 +161,45 @@ export class NameInventarioRepository {
       },
     });
   }
+
+  async findNameBaseInventario(
+    id: string,
+    create_id: string,
+  ): Promise<ListNameInventarioDto> {
+    return await this.prisma.baseNameInventario.findFirst({
+      where: {
+        id,
+        create_id,
+      },
+    });
+  }
+  async updateStatus(id: string) {
+    await this.prisma.baseNameInventario.update({
+      where: {
+        id,
+      },
+      data: {
+        firstStatus: false,
+        secondStatus: null,
+      },
+    });
+  }
+
+  async updateFirsSecondStatus(id: string, newData: UpdateNameInventarioDto) {
+    await this.prisma.baseNameInventario.update({
+      where: {
+        id,
+      },
+      data: {
+        ...newData,
+      },
+    });
+  }
+  async findOnUserNameInventario(req: ReqUserDto) {
+    return this.prisma.baseNameInventario.findFirst({
+      where: {
+        create_id: req.user.id,
+      },
+    });
+  }
 }

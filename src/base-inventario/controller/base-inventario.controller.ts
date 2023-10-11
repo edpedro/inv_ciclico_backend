@@ -14,12 +14,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions, UploadDto } from 'src/utils/file-upload.dto';
-import { BaseInventarioService } from './base-inventario.service';
-import { ListEnderecoDto } from './dto/list-endereco.dto';
-import { ListItemDto } from './dto/list-item.dto';
-import { UpdateBaseInventarioDto } from './dto/update-base-inventario.dto copy';
-import { UpdateWmsInventarioDto } from './dto/update-wms-inventario.dto';
-import { ListItemHistoricoDto } from './dto/list-historico.item.dto copy';
+import { BaseInventarioService } from '../service/base-inventario.service';
+import { ListEnderecoDto } from '../dto/list-endereco.dto';
+import { ListItemDto } from '../dto/list-item.dto';
+import { UpdateBaseInventarioDto } from '../dto/update-base-inventario.dto';
+import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
+import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
 
 @Controller('ciclico')
 @UseGuards(AuthGuard('jwt'))
@@ -38,7 +38,7 @@ export class BaseInventarioController {
 
   @Get(':id')
   async listInventario(@Param('id') id: string) {
-    return await this.baseInventarioService.listBaseInv(id);
+    return await this.baseInventarioService.listBaseInventario(id);
   }
 
   @Get('endereco/:id')
@@ -47,11 +47,11 @@ export class BaseInventarioController {
   }
   @Post('historico')
   async historicoItem(@Body() data: ListItemHistoricoDto) {
-    return await this.baseInventarioService.historicoGetItemAll(data);
+    return await this.baseInventarioService.allHistoryItem(data);
   }
   @Delete('endereco/:id')
   async removeInv(@Param('id') id: string, @Req() req: any) {
-    return await this.baseInventarioService.remove(id, req);
+    return await this.baseInventarioService.removeInventario(id, req);
   }
   @Post('endereco/:id')
   async listIEndereco(@Body() data: ListEnderecoDto, @Param('id') id: string) {
@@ -68,7 +68,7 @@ export class BaseInventarioController {
     @Param('id') id: string,
     @Req() req: any,
   ) {
-    return await this.baseInventarioService.update(data, id, req);
+    return await this.baseInventarioService.updateInventario(data, id, req);
   }
 
   @Patch('second/:id')
