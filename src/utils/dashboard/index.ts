@@ -27,10 +27,7 @@ export async function DashboardCreate(data: ListDashboardDto[]) {
 
   const { totalAcertos, totalDivergencia } = await DivergeciasAcertos(data);
 
-  const { evolucaoContagem } = await Evolucao(
-    removeDuplicatesEndereco,
-    totalEndereco,
-  );
+  const { evolucaoContagem } = await Evolucao(data, totalEndereco);
 
   const { acuracidade, totalSomaContagem, totalSomaWms } = await Acuracidade(
     data,
