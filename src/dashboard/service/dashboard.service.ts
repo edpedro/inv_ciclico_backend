@@ -37,6 +37,7 @@ export class DashboardService {
       acuracidade,
       totalSomaContagem,
       totalSomaWms,
+      acuracidadeAtual,
     } = await DashboardCreate(resultDash);
 
     return {
@@ -53,6 +54,7 @@ export class DashboardService {
       totalDivergencia,
       totalAcertos,
       evolucaoContagem,
+      acuracidadeAtual,
     };
   }
 }
