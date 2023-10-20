@@ -202,4 +202,14 @@ export class NameInventarioRepository {
       },
     });
   }
+  async updateUploadStatus(id: string, upload: boolean) {
+    await this.prisma.baseNameInventario.update({
+      where: {
+        id,
+      },
+      data: {
+        upload,
+      },
+    });
+  }
 }

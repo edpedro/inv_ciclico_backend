@@ -1,3 +1,4 @@
+import { UpdateUploadNameInventarioUseCase } from './../name-inventario/usecases/update-upload-nameInventario.usecase';
 import { Module } from '@nestjs/common';
 import { BaseInventarioService } from './service/base-inventario.service';
 import { BaseInventarioController } from './controller/base-inventario.controller';
@@ -48,6 +49,7 @@ import { HistoryBaseInventarioUseCase } from './usecases/find-history-base-inven
     UpdateSecondBaseInventarioUseCase,
     UpdateWmsBaseInventarioUseCase,
     HistoryBaseInventarioUseCase,
+    UpdateUploadNameInventarioUseCase,
   ],
 })
 export class BaseInventarioModule {}

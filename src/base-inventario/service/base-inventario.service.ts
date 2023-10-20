@@ -1,3 +1,4 @@
+import { UpdateUploadNameInventarioUseCase } from './../../name-inventario/usecases/update-upload-nameInventario.usecase';
 import { HistoryBaseInventarioUseCase } from './../usecases/find-history-base-inventario.usecase';
 import { UpdateWmsBaseInventarioUseCase } from './../usecases/update-wms-base-inventario.usecase';
 import { UpdateFirtsSecondNameInventarioUseCase } from './../../name-inventario/usecases/update-firsSecond-nameInventario.usecase';
@@ -46,6 +47,7 @@ export class BaseInventarioService {
     private readonly updateSecondBaseInventarioUseCase: UpdateSecondBaseInventarioUseCase,
     private readonly updateWmsBaseInventarioUseCase: UpdateWmsBaseInventarioUseCase,
     private readonly historyBaseInventarioUseCase: HistoryBaseInventarioUseCase,
+    private readonly updateUploadNameInventarioUseCase: UpdateUploadNameInventarioUseCase,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -73,6 +75,10 @@ export class BaseInventarioService {
 
     const createInventario = await this.createBaseInventarioUseCase.execute(
       data,
+    );
+
+    await this.updateUploadNameInventarioUseCase.execute(
+      dataInventario.baseNameInventario_id,
     );
 
     return createInventario;
