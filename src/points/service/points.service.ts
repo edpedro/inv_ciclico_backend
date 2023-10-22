@@ -6,6 +6,7 @@ import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 import { DivergeciasAcertos } from 'src/utils/dashboard/divergeciasAcertos';
 import { TotalContagem } from 'src/utils/dashboard/totalContagem';
 import { createPoints } from 'src/utils/points/createPoints';
+import { TotalPointsContagem } from 'src/utils/points/totalPointsContagem';
 
 @Injectable()
 export class PointsService {
@@ -18,14 +19,18 @@ export class PointsService {
   async findPointsOne(req: ReqUserDto) {
     const baseInvExists = await this.listOnePointsUseCase.execute(req);
 
-    const { totalSegundaContagem } = await TotalContagem(baseInvExists);
+    const { totalPrimeiraContagem, totalSegundaContagem } =
+      await TotalPointsContagem(baseInvExists);
+    // const { totalPrimeiraContagem, totalSegundaContagem } = await TotalContagem(
+    //   baseInvExists,
+    // );
 
     const { totalAcertos } = await DivergeciasAcertos(baseInvExists);
 
-    const totalPoints = totalAcertos - totalSegundaContagem;
+    const totalPoints = totalPrimeiraContagem - totalSegundaContagem;
 
     return {
-      totalAcertos,
+      totalPrimeiraContagem,
       totalSegundaContagem,
       totalPoints,
     };
@@ -33,9 +38,11 @@ export class PointsService {
 
   async findPointsAllUsers(req: ReqUserDto) {
     const baseInvExists = await this.listAllBasePointsUseCase.execute();
+    // console.log(baseInvExists);
+    // const user = await this.usersService.findAllUsersInvited(req.user.id);
 
-    const user = await this.usersService.findAllUsersInvited(req.user.id);
+    // const result = await createPoints(user, baseInvExists);
 
-    return await createPoints(user, baseInvExists);
+    return baseInvExists;
   }
 }

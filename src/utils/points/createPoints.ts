@@ -7,8 +7,8 @@ export async function createPoints(
 ) {
   const pointsArray = user.map((userData) => {
     let totalSKU = 0;
+    let totalPrimeiraContagem = 0;
     let totalSegundaContagem = 0;
-    let divergenciaArray = [];
 
     baseInvExists.forEach((baseData) => {
       if (baseData.username_id === userData.id) {
@@ -16,21 +16,13 @@ export async function createPoints(
 
         if (baseData.secondCount !== null) {
           totalSegundaContagem++;
-        }
-
-        if (
-          baseData.secondCount &&
-          baseData.secondCount !== baseData.saldoWms
-        ) {
-          divergenciaArray.push(baseData.item);
+        } else {
+          totalPrimeiraContagem++;
         }
       }
     });
 
-    const uniqueArrayDivergencia = [...new Set(divergenciaArray)];
-    const totalDivergencia = uniqueArrayDivergencia.length;
-    const totalAcertos = totalSKU - totalDivergencia;
-    const totalPoints = totalAcertos - totalSegundaContagem;
+    const totalPoints = totalPrimeiraContagem - totalSegundaContagem;
 
     return {
       id: userData.id,
