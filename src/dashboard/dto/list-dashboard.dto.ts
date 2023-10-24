@@ -6,6 +6,7 @@ export class ListDashboardDto {
   readonly tipoEstoque?: string;
   readonly catItem?: string;
   readonly saldoWms?: number;
+  readonly price?: number | null;
   readonly firstCount?: number | null;
   readonly secondCount?: number | null;
   readonly firstStatus?: boolean | null;

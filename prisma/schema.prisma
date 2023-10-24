@@ -37,6 +37,7 @@ model BaseInventario {
   tipoEstoque   String
   catItem   String
   saldoWms    Float  
+  price Float?
   firstCount Float?  
   secondCount Float? 
   firstStatus Boolean? @default(false) 

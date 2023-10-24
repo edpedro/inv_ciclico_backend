@@ -10,6 +10,7 @@ const FIELD_NAMES = {
   tipoEstoque: 'Tip.Estoque',
   catItem: 'Cat.Item',
   saldoWms: 'Dispon.Exped.',
+  price: 'Valor',
 };
 
 export async function createExcelBaseInventario(file: UploadDto, id: string) {
@@ -19,6 +20,13 @@ export async function createExcelBaseInventario(file: UploadDto, id: string) {
   const dataJson = XLSX.utils.sheet_to_json(sheet);
 
   function checkColumnsCreateArray(dataJson, FIELD_NAMES) {
+    // Se "price" não estiver nas chaves do Excel, defina um valor padrão
+    dataJson.forEach((datas) => {
+      if (!datas[FIELD_NAMES.price]) {
+        datas[FIELD_NAMES.price] = null;
+      }
+    });
+
     // Obter as chaves do primeiro objeto em dataJson
     const dataJsonKeys = Object.keys(dataJson[0]).sort();
 
@@ -28,7 +36,7 @@ export async function createExcelBaseInventario(file: UploadDto, id: string) {
     // Verificar se as chaves correspondem
     if (JSON.stringify(dataJsonKeys) !== JSON.stringify(fieldNamesKeys)) {
       throw new HttpException(
-        'As colunas do Excel não correspondem às predefinidas',
+        'As colunas do Excel não correspondem às pre-definidas',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -40,6 +48,7 @@ export async function createExcelBaseInventario(file: UploadDto, id: string) {
       tipoEstoque: datas[FIELD_NAMES.tipoEstoque],
       catItem: datas[FIELD_NAMES.catItem],
       saldoWms: datas[FIELD_NAMES.saldoWms],
+      price: datas[FIELD_NAMES.price],
       baseNameInventario_id: id,
     }));
     return data;

@@ -36,6 +36,10 @@ export class CreateBaseInventarioDto {
   readonly saldoFisico?: number;
 
   @IsOptional()
+  @IsNotEmpty({ message: "O campo 'Preço' deve ser uma boolean." })
+  readonly price?: number;
+
+  @IsOptional()
   @IsBoolean({ message: "O campo 'Staus' deve ser uma boolean." })
   readonly status?: boolean;
 

@@ -9,6 +9,7 @@ import { DivergeciasAcertos } from './divergeciasAcertos';
 import { Evolucao } from './evolucao';
 import { Acuracidade } from './acuracidade';
 import { AcuracidadeAtual } from './acuracidadeAtual';
+import { ValorContagem } from './valorContagem';
 
 export async function DashboardCreate(data: ListDashboardDto[]) {
   const removeDuplicatesItem = await RemoveDuplicatesItem(data);
@@ -37,6 +38,8 @@ export async function DashboardCreate(data: ListDashboardDto[]) {
 
   const { acuracidadeAtual } = await AcuracidadeAtual(data, totalDivergencia);
 
+  const valorTotal = await ValorContagem(data);
+
   return {
     totalSKU,
     removeDuplicatesEndereco,
@@ -53,5 +56,6 @@ export async function DashboardCreate(data: ListDashboardDto[]) {
     totalSomaContagem,
     totalSomaWms,
     acuracidadeAtual,
+    valorTotal,
   };
 }
