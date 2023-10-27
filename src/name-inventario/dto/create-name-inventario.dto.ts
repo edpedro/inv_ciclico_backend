@@ -9,6 +9,10 @@ export class CreateNameInventarioDto {
   @IsNotEmpty({ message: "O campo 'Data' não pode estar vazio." })
   readonly date: string;
 
+  @IsString({ message: "O campo 'Type' deve ser uma string." })
+  @IsOptional()
+  readonly type?: string;
+
   @IsOptional()
   @IsString({
     each: true,

@@ -18,6 +18,7 @@ export class NameInventarioRepository {
       data: {
         name: data.name,
         date: data.date,
+        type: data.type,
         create_id: req.user.id,
         users: {
           create: user_ids,

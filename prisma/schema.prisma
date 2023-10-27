@@ -59,7 +59,8 @@ model BaseNameInventario {
   date String
   name String
   firstStatus   Boolean @default(false)
-  secondStatus Boolean?  
+  secondStatus Boolean? 
+  type String? 
   upload Boolean? @default(false)
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
