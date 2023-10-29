@@ -34,7 +34,7 @@ export class AuthService {
       return null;
     }
 
-    if (!user) {
+    if (!user || user.active === false) {
       return null;
     }
 

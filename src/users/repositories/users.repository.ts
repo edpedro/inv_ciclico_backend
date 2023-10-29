@@ -24,6 +24,7 @@ export class UsersRepository {
         name: true,
         username: true,
         role: true,
+        active: true,
         createdById: true,
         created_at: true,
         updated_at: true,
@@ -48,6 +49,7 @@ export class UsersRepository {
         name: true,
         username: true,
         role: true,
+        active: true,
         createdById: true,
         created_at: true,
         updated_at: true,
@@ -61,6 +63,7 @@ export class UsersRepository {
     return await this.prisma.user.findMany({
       where: {
         createdById: id,
+        active: true,
       },
       select: {
         id: true,
@@ -109,9 +112,12 @@ export class UsersRepository {
     });
   }
   async remove(id: string) {
-    return await this.prisma.user.delete({
+    return await this.prisma.user.update({
       where: {
         id,
+      },
+      data: {
+        active: false,
       },
     });
   }
@@ -122,6 +128,7 @@ export class UsersRepository {
         id: {
           in: user_id,
         },
+        active: true,
       },
     });
   }

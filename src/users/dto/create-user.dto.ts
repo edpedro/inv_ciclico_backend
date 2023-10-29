@@ -17,6 +17,9 @@ export class CreateUserDto {
   @IsOptional()
   readonly role: string;
 
+  @IsOptional()
+  readonly active?: boolean;
+
   @IsString({ message: "O campo 'createdById' deve ser uma string." })
   @IsOptional()
   readonly createdById?: string;
