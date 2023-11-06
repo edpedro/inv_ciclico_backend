@@ -5,19 +5,18 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { DashboardCreate } from '../../utils/dashboard/index';
+import { ListAllBaseInventarioUseCase } from 'src/base-inventario/usecases/list-all-inventario.usecase';
 
 @Injectable()
 @UseGuards(AuthGuard('jwt'))
 export class DashboardService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly listAllBaseInventarioUseCase: ListAllBaseInventarioUseCase,
+  ) {}
 
   async findIdInve(id: string) {
-    //Implementacao usecase baseInventario
-    const resultDash = await this.prisma.baseInventario.findMany({
-      where: { baseNameInventario_id: id },
-    });
+    const resultDash = await this.listAllBaseInventarioUseCase.execute(id);
 
     if (resultDash.length <= 0) {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
@@ -39,6 +38,7 @@ export class DashboardService {
       totalSomaWms,
       acuracidadeAtual,
       valorTotal,
+      tempoInventario,
     } = await DashboardCreate(resultDash);
 
     return {
@@ -57,6 +57,7 @@ export class DashboardService {
       evolucaoContagem,
       acuracidadeAtual,
       valorTotal,
+      tempoInventario,
     };
   }
 }

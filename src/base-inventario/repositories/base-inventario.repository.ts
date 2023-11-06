@@ -97,6 +97,8 @@ export class BaseInventarioRepository {
   }
 
   async update(data: UpdateBaseInventarioDto, id: number, req: ReqUserDto) {
+    data.updated_at = new Date();
+
     return await this.prisma.baseInventario.update({
       where: {
         id,
