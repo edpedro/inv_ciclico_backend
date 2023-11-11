@@ -20,6 +20,8 @@ import { ListItemDto } from '../dto/list-item.dto';
 import { UpdateBaseInventarioDto } from '../dto/update-base-inventario.dto';
 import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
+import { AlocateEnderecoUser } from '../dto/alocate-endereco-inventario.dto';
+import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 
 @Controller('ciclico')
 @UseGuards(AuthGuard('jwt'))
@@ -88,8 +90,16 @@ export class BaseInventarioController {
   async updateItemWms(
     @Body() data: UpdateWmsInventarioDto,
     @Param('id') id: string,
-    @Req() req: any,
+    @Req() req: ReqUserDto,
   ) {
     return await this.baseInventarioService.updateAdminWMS(data, id, req);
+  }
+
+  @Patch('endereco/user/:id')
+  async alocateEnderecoUser(
+    @Body() data: AlocateEnderecoUser,
+    @Param('id') id: string,
+  ) {
+    return await this.baseInventarioService.alocateEnderecoUser(data, id);
   }
 }

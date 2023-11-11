@@ -22,7 +22,8 @@ model User {
   createdUsers User[] @relation("CreatedByUser")
   
  
-  baseInventario BaseInventario[]
+  baseInventario BaseInventario[]@relation("UserRelation")
+  baseInventarioEnd BaseInventario[]@relation("UserEnderecoRelation")
   baseNameInventario BaseNameInventario[]
   baseNameInventarios NameInventarioOnUsers[]
   
@@ -46,8 +47,11 @@ model BaseInventario {
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
-  user User? @relation(fields: [username_id], references: [id])
+  user User? @relation("UserRelation", fields: [username_id], references: [id])
   username_id String?
+
+  user_endereco User? @relation("UserEnderecoRelation", fields: [user_endereco_id], references: [id])
+  user_endereco_id String?
 
   baseNameInventario BaseNameInventario @relation(fields: [baseNameInventario_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   baseNameInventario_id String

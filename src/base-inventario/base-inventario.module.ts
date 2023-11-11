@@ -22,6 +22,9 @@ import { ListOnItemInventarioUseCase } from './usecases/list-on-item-inventario.
 import { UpdateSecondBaseInventarioUseCase } from './usecases/update-second-base-inventario.usecase';
 import { UpdateWmsBaseInventarioUseCase } from './usecases/update-wms-base-inventario.usecase';
 import { HistoryBaseInventarioUseCase } from './usecases/find-history-base-inventario.usecase';
+import { ListUserOnInventarioUserUseCase } from './usecases/list-inv-user-inventario.usecase';
+import { ListAllArrayEndereco } from './usecases/list-all-array-endereco-inventario.usecase';
+import { AlocateUserInventario } from './usecases/alocate-user-inventario.usecase';
 
 @Module({
   imports: [],
@@ -50,6 +53,9 @@ import { HistoryBaseInventarioUseCase } from './usecases/find-history-base-inven
     UpdateWmsBaseInventarioUseCase,
     HistoryBaseInventarioUseCase,
     UpdateUploadNameInventarioUseCase,
+    ListUserOnInventarioUserUseCase,
+    ListAllArrayEndereco,
+    AlocateUserInventario,
   ],
 })
 export class BaseInventarioModule {}

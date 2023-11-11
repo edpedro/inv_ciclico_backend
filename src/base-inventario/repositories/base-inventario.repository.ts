@@ -8,6 +8,7 @@ import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 import { UpdateBaseInventarioDto } from '../dto/update-base-inventario.dto';
 import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
+import { AlocateEnderecoUser } from '../dto/alocate-endereco-inventario.dto';
 
 @Injectable()
 export class BaseInventarioRepository {
@@ -189,6 +190,39 @@ export class BaseInventarioRepository {
             username: true,
           },
         },
+      },
+    });
+  }
+  async ListInventarioOnUser(user_id: string, nameInventario_id: string) {
+    return await this.prisma.nameInventarioOnUsers.findFirst({
+      where: {
+        nameInventario_id,
+        user_id,
+      },
+    });
+  }
+
+  async FindAllArrayEndereco(data: AlocateEnderecoUser, id: string) {
+    return await this.prisma.baseInventario.findMany({
+      where: {
+        baseNameInventario_id: id,
+        endereco: {
+          in: data.endereco,
+        },
+      },
+    });
+  }
+
+  async AlocateUserInventario(data: AlocateEnderecoUser, id: string) {
+    return await this.prisma.baseInventario.updateMany({
+      where: {
+        baseNameInventario_id: id,
+        endereco: {
+          in: data.endereco,
+        },
+      },
+      data: {
+        user_endereco_id: data.username_id,
       },
     });
   }
