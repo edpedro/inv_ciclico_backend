@@ -8,7 +8,9 @@ import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 import { UpdateBaseInventarioDto } from '../dto/update-base-inventario.dto';
 import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
-import { AlocateEnderecoUser } from '../dto/alocate-endereco-inventario.dto';
+import { AlocateEnderecoUserDto } from '../dto/alocate-endereco-inventario.dto';
+import { createArrayFkUserId } from 'src/utils/nameInventario/createArrayFkUserId';
+import { userInventarioAssociations } from '../dto/associations-users-inventario.dto';
 
 @Injectable()
 export class BaseInventarioRepository {
@@ -33,6 +35,7 @@ export class BaseInventarioRepository {
       where: {
         baseNameInventario_id: id,
       },
+
       orderBy: {
         endereco: 'asc',
       },
@@ -193,36 +196,123 @@ export class BaseInventarioRepository {
       },
     });
   }
-  async ListInventarioOnUser(user_id: string, nameInventario_id: string) {
-    return await this.prisma.nameInventarioOnUsers.findFirst({
+  async ListInventarioOnUser(user_ids: string[], nameInventario_id: string) {
+    return await this.prisma.nameInventarioOnUsers.findMany({
       where: {
         nameInventario_id,
-        user_id,
+        user_id: {
+          in: user_ids,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
   }
 
-  async FindAllArrayEndereco(data: AlocateEnderecoUser, id: string) {
+  async FindAllArrayEndereco(data: AlocateEnderecoUserDto, id: string) {
+    // return await this.prisma.baseInventario.findMany({
+    //   where: {
+    //     baseNameInventario_id: id,
+    //     endereco: {
+    //       in: data.baseInventario_id,
+    //     },
+    //   },
+    // });
+  }
+
+  async AlocateUserInventario(datas: AlocateEnderecoUserDto[], id: string) {
+    const data: AlocateEnderecoUserDto[] = datas;
+
+    for (let index of data) {
+      const maxLen = Math.max(
+        index.user_ids.length,
+        index.baseInventario_ids.length,
+      );
+
+      for (let i = 0; i < maxLen; i++) {
+        const userIDs = index.user_ids[i % index.user_ids.length];
+        const baseInventarioIdS =
+          index.baseInventario_ids[i % index.baseInventario_ids.length];
+
+        await this.prisma.usersOnEnderecos.create({
+          data: {
+            baseNameInventario_id: id,
+            user_id: userIDs,
+            baseInventario_id: baseInventarioIdS,
+            assignedBy: 'auth',
+          },
+        });
+      }
+    }
+  }
+
+  async findEndecoBaseInventario(id: string, req: ReqUserDto) {
     return await this.prisma.baseInventario.findMany({
       where: {
         baseNameInventario_id: id,
-        endereco: {
-          in: data.endereco,
+        users: {
+          some: {
+            user_id: req.user.id,
+          },
+        },
+      },
+      orderBy: {
+        endereco: 'asc',
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
         },
       },
     });
   }
 
-  async AlocateUserInventario(data: AlocateEnderecoUser, id: string) {
-    return await this.prisma.baseInventario.updateMany({
+  async findRelationUserInventario(id: string) {
+    return await this.prisma.usersOnEnderecos.findMany({
       where: {
         baseNameInventario_id: id,
-        endereco: {
-          in: data.endereco,
+      },
+      include: {
+        baseInventario: {
+          select: {
+            id: true,
+            endereco: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
       },
-      data: {
-        user_endereco_id: data.username_id,
+    });
+  }
+  async findAllUsersInventario(id: string) {
+    return await this.prisma.baseInventario.findMany({
+      where: {
+        baseNameInventario_id: id,
+      },
+      include: {
+        users: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
   }

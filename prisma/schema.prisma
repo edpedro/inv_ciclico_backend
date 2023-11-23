@@ -22,10 +22,10 @@ model User {
   createdUsers User[] @relation("CreatedByUser")
   
  
-  baseInventario BaseInventario[]@relation("UserRelation")
-  baseInventarioEnd BaseInventario[]@relation("UserEnderecoRelation")
+  baseInventario BaseInventario[]@relation() 
   baseNameInventario BaseNameInventario[]
   baseNameInventarios NameInventarioOnUsers[]
+  baseInventarios UsersOnEnderecos[]
   
   @@map("users")
 }
@@ -47,14 +47,13 @@ model BaseInventario {
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 
-  user User? @relation("UserRelation", fields: [username_id], references: [id])
+  user User? @relation(fields: [username_id], references: [id])
   username_id String?
-
-  user_endereco User? @relation("UserEnderecoRelation", fields: [user_endereco_id], references: [id])
-  user_endereco_id String?
 
   baseNameInventario BaseNameInventario @relation(fields: [baseNameInventario_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   baseNameInventario_id String
+
+  users UsersOnEnderecos[]
 
   @@map("baseInventario") 
 
@@ -75,6 +74,7 @@ model BaseNameInventario {
 
   users NameInventarioOnUsers[]
   baseInventario BaseInventario[]
+  usersEnd UsersOnEnderecos[]
 
   @@map("baseNameInventario") 
 
@@ -91,4 +91,20 @@ model NameInventarioOnUsers {
   assignedBy String
 
   @@id([user_id, nameInventario_id])
+}
+
+model UsersOnEnderecos {
+  user User @relation(fields: [user_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user_id String
+
+  baseInventario BaseInventario @relation(fields: [baseInventario_id], references: [id], onUpdate: Cascade)
+  baseInventario_id Int
+
+  baseNameInventario BaseNameInventario @relation(fields: [baseNameInventario_id], references: [id], onUpdate: Cascade)
+  baseNameInventario_id String
+
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([user_id, baseInventario_id])
 }

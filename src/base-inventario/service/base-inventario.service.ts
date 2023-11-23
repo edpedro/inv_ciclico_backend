@@ -26,10 +26,14 @@ import { ListOnItemInventarioUseCase } from '../usecases/list-on-item-inventario
 import { UpdateSecondBaseInventarioUseCase } from '../usecases/update-second-base-inventario.usecase';
 import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
-import { AlocateEnderecoUser } from '../dto/alocate-endereco-inventario.dto';
+import { AlocateEnderecoUserDto } from '../dto/alocate-endereco-inventario.dto';
 import { ListUserOnInventarioUserUseCase } from '../usecases/list-inv-user-inventario.usecase';
-import { ListAllArrayEndereco } from '../usecases/list-all-array-endereco-inventario.usecase';
 import { AlocateUserInventario } from '../usecases/alocate-user-inventario.usecase';
+import { verifyUsersEqual } from 'src/utils/baseInventario/verifyUsersEqual';
+import { ListDataEnderecoBaseInventarioUseCase } from '../usecases/list-data-endereco-inventario.usecase';
+import { ListRelationUserInvInventarioUseCase } from '../usecases/list-relation-user-inventario.usecase';
+import { ListAllUsersEnderecoBaseInventarioUseCase } from '../usecases/list-all-users-endereco-inventario.usecase';
+import { ListUsersIdsUseCase } from 'src/users/usecases/list-users-ids.usecase';
 
 @Injectable()
 export class BaseInventarioService {
@@ -54,8 +58,11 @@ export class BaseInventarioService {
     private readonly updateUploadNameInventarioUseCase: UpdateUploadNameInventarioUseCase,
     private readonly listInventarioUserUseCase: ListBaseInventarioUseCase,
     private readonly listUserOnInventarioUserUseCase: ListUserOnInventarioUserUseCase,
-    private readonly listAllArrayEndereco: ListAllArrayEndereco,
     private readonly alocateUserInventario: AlocateUserInventario,
+    private readonly ListDataEnderecoBaseInventarioUseCase: ListDataEnderecoBaseInventarioUseCase,
+    private readonly listRelationUserInvInventarioUseCase: ListRelationUserInvInventarioUseCase,
+    private readonly listAllUsersEnderecoBaseInventarioUseCase: ListAllUsersEnderecoBaseInventarioUseCase,
+    private readonly listUsersIdsUseCase: ListUsersIdsUseCase,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -101,15 +108,24 @@ export class BaseInventarioService {
 
     return baseInvExists;
   }
-  async listTotalEndereco(id: string) {
-    const baseInvExists = await this.listAllBaseInventarioUseCase.execute(id);
+  async listTotalEndereco(id: string, req: ReqUserDto) {
+    const invExists = await this.ListDataEnderecoBaseInventarioUseCase.execute(
+      id,
+      req,
+    );
 
-    if (baseInvExists.length <= 0) {
-      throw new HttpException(
-        'Endereco não encontrados',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    const relation = await this.listRelationUserInvInventarioUseCase.execute(
+      id,
+    );
+
+    const allEnd = await this.listAllBaseInventarioUseCase.execute(id);
+
+    const baseInvExists =
+      invExists.length > 0
+        ? invExists
+        : relation.length <= 0
+        ? allEnd
+        : invExists;
 
     const result = baseInvExists.reduce((accumulator, current) => {
       const enderecoExistente = accumulator.find(
@@ -144,11 +160,9 @@ export class BaseInventarioService {
       data,
       id,
     );
-
     if (baseInvExists.length <= 0) {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
-
     return baseInvExists;
   }
   async listItem(data: ListItemDto, id: string) {
@@ -187,7 +201,11 @@ export class BaseInventarioService {
     }
   }
 
-  async updateInventario(data: UpdateBaseInventarioDto, id: string, req: any) {
+  async updateInventario(
+    data: UpdateBaseInventarioDto,
+    id: string,
+    req: ReqUserDto,
+  ) {
     try {
       const nameInvExists = await this.listUserOnNameInventarioUseCase.execute(
         req,
@@ -366,39 +384,56 @@ export class BaseInventarioService {
     return totalInvExists;
   }
 
-  async alocateEnderecoUser(data: AlocateEnderecoUser, id: string) {
+  async alocateEnderecoUser(data: AlocateEnderecoUserDto[], id: string) {
     const invExists = await this.listInventarioUserUseCase.execute(id);
 
     if (!invExists) {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
+    const userIds = [];
+    data.map((vale) => userIds.push(...vale.user_ids));
+
     const userOnInvExists = await this.listUserOnInventarioUserUseCase.execute(
       id,
-      data.username_id,
+      userIds,
     );
 
-    if (!userOnInvExists) {
-      throw new HttpException(
-        'Usuario não alocado para Inventario',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    const userExists = await this.listUsersIdsUseCase.execute(userIds);
 
-    const enderecoExists = await this.listAllArrayEndereco.execute(data, id);
+    const { isEqual, missingIds } = await verifyUsersEqual(
+      userOnInvExists,
+      userExists,
+    );
 
-    if (enderecoExists.length <= 0) {
+    if (!isEqual) {
       throw new HttpException(
-        'Enderecos não encontrados',
+        `Usuario(s) ${missingIds} não alocado para Inventario`,
         HttpStatus.BAD_REQUEST,
       );
     }
 
     try {
       const result = await this.alocateUserInventario.execute(data, id);
-
       return result;
     } catch (error) {
       throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async listAlocateEnderecoUserIn(id: string, req: ReqUserDto) {
+    const invExists =
+      await this.listAllUsersEnderecoBaseInventarioUseCase.execute(id);
+
+    const result = invExists.map((item) => ({
+      id: item.id,
+      endereco: item.endereco,
+      baseNameInventario_id: item.baseNameInventario_id,
+      users: item.users.map((userItem) => ({
+        id: userItem.user.id,
+        name: userItem.user.name,
+      })),
+    }));
+
+    return result;
   }
 }

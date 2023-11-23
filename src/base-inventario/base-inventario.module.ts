@@ -9,7 +9,7 @@ import { CreateBaseInventarioUseCase } from './usecases/create-base-inventario.u
 import { NameInventarioRepository } from 'src/name-inventario/repositories/name-inventario.repository';
 import { BaseInventarioRepository } from './repositories/base-inventario.repository';
 import { ListAllBaseInventarioUseCase } from './usecases/list-all-inventario.usecase';
-import { ListEnderecoBaseInventarioUseCase } from './usecases/list-endereco-inventario.usecase';
+import { ListDataEnderecoBaseInventarioUseCase } from './usecases/list-data-endereco-inventario.usecase';
 import { ListItemBaseInventarioUseCase } from './usecases/list-item-inventario.usecase';
 import { UpdateStatusNameInventarioUseCase } from 'src/name-inventario/usecases/update-status-nameInventario.usecase';
 import { RemoveBaseInventarioUseCase } from './usecases/remove-base-inventario.usecase';
@@ -23,8 +23,12 @@ import { UpdateSecondBaseInventarioUseCase } from './usecases/update-second-base
 import { UpdateWmsBaseInventarioUseCase } from './usecases/update-wms-base-inventario.usecase';
 import { HistoryBaseInventarioUseCase } from './usecases/find-history-base-inventario.usecase';
 import { ListUserOnInventarioUserUseCase } from './usecases/list-inv-user-inventario.usecase';
-import { ListAllArrayEndereco } from './usecases/list-all-array-endereco-inventario.usecase';
 import { AlocateUserInventario } from './usecases/alocate-user-inventario.usecase';
+import { ListEnderecoBaseInventarioUseCase } from './usecases/list-endereco-inventario.usecase';
+import { ListRelationUserInvInventarioUseCase } from './usecases/list-relation-user-inventario.usecase';
+import { ListAllUsersEnderecoBaseInventarioUseCase } from './usecases/list-all-users-endereco-inventario.usecase';
+import { ListUsersIdsUseCase } from 'src/users/usecases/list-users-ids.usecase';
+import { UsersRepository } from 'src/users/repositories/users.repository';
 
 @Module({
   imports: [],
@@ -34,11 +38,13 @@ import { AlocateUserInventario } from './usecases/alocate-user-inventario.usecas
     PrismaService,
     BaseInventarioRepository,
     NameInventarioRepository,
+    UsersRepository,
     ListOneNameBaseInventarioUseCase,
     ListBaseInventarioUseCase,
     CreateBaseInventarioUseCase,
+    ListBaseInventarioUseCase,
     ListAllBaseInventarioUseCase,
-    ListEnderecoBaseInventarioUseCase,
+    ListOneNameBaseInventarioUseCase,
     ListItemBaseInventarioUseCase,
     UpdateStatusNameInventarioUseCase,
     RemoveBaseInventarioUseCase,
@@ -54,8 +60,12 @@ import { AlocateUserInventario } from './usecases/alocate-user-inventario.usecas
     HistoryBaseInventarioUseCase,
     UpdateUploadNameInventarioUseCase,
     ListUserOnInventarioUserUseCase,
-    ListAllArrayEndereco,
     AlocateUserInventario,
+    ListEnderecoBaseInventarioUseCase,
+    ListDataEnderecoBaseInventarioUseCase,
+    ListRelationUserInvInventarioUseCase,
+    ListAllUsersEnderecoBaseInventarioUseCase,
+    ListUsersIdsUseCase,
   ],
 })
 export class BaseInventarioModule {}

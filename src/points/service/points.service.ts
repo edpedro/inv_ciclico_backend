@@ -25,7 +25,7 @@ export class PointsService {
     //   baseInvExists,
     // );
 
-    const { totalAcertos } = await DivergeciasAcertos(baseInvExists);
+    // const { totalAcertos } = await DivergeciasAcertos(baseInvExists);
 
     const totalPoints = totalPrimeiraContagem - totalSegundaContagem;
 
@@ -38,11 +38,11 @@ export class PointsService {
 
   async findPointsAllUsers(req: ReqUserDto) {
     const baseInvExists = await this.listAllBasePointsUseCase.execute();
-    // console.log(baseInvExists);
-    // const user = await this.usersService.findAllUsersInvited(req.user.id);
 
-    // const result = await createPoints(user, baseInvExists);
+    const user = await this.usersService.findAllUsersInvited(req.user.id);
 
-    return baseInvExists;
+    const result = await createPoints(user, baseInvExists);
+
+    return result;
   }
 }

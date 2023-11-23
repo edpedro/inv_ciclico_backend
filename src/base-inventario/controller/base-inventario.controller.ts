@@ -20,7 +20,7 @@ import { ListItemDto } from '../dto/list-item.dto';
 import { UpdateBaseInventarioDto } from '../dto/update-base-inventario.dto';
 import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
-import { AlocateEnderecoUser } from '../dto/alocate-endereco-inventario.dto';
+import { AlocateEnderecoUserDto } from '../dto/alocate-endereco-inventario.dto';
 import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 
 @Controller('ciclico')
@@ -39,13 +39,13 @@ export class BaseInventarioController {
   }
 
   @Get(':id')
-  async listInventario(@Param('id') id: string) {
+  async listInventario(@Param('id') id: string, @Req() req: any) {
     return await this.baseInventarioService.listBaseInventario(id);
   }
 
   @Get('endereco/:id')
-  async totalEndereco(@Param('id') id: string) {
-    return await this.baseInventarioService.listTotalEndereco(id);
+  async totalEndereco(@Param('id') id: string, @Req() req: ReqUserDto) {
+    return await this.baseInventarioService.listTotalEndereco(id, req);
   }
   @Post('historico')
   async historicoItem(@Body() data: ListItemHistoricoDto) {
@@ -95,11 +95,18 @@ export class BaseInventarioController {
     return await this.baseInventarioService.updateAdminWMS(data, id, req);
   }
 
-  @Patch('endereco/user/:id')
+  @Post('endereco/user/:id')
   async alocateEnderecoUser(
-    @Body() data: AlocateEnderecoUser,
+    @Body() data: AlocateEnderecoUserDto[],
     @Param('id') id: string,
   ) {
     return await this.baseInventarioService.alocateEnderecoUser(data, id);
+  }
+  @Get('endereco/user/:id')
+  async listAlocateEnderecoUser(
+    @Param('id') id: string,
+    @Req() req: ReqUserDto,
+  ) {
+    return await this.baseInventarioService.listAlocateEnderecoUserIn(id, req);
   }
 }
