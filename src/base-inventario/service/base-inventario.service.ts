@@ -391,7 +391,7 @@ export class BaseInventarioService {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
     const userIds = [];
-    data.map((vale) => userIds.push(...vale.user_ids));
+    data.map((value) => userIds.push(...value.user_ids));
 
     const userOnInvExists = await this.listUserOnInventarioUserUseCase.execute(
       id,

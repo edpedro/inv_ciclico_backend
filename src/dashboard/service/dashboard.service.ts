@@ -39,6 +39,7 @@ export class DashboardService {
       acuracidadeAtual,
       valorTotal,
       tempoInventario,
+      usersPoints,
     } = await DashboardCreate(resultDash);
 
     return {
@@ -58,6 +59,7 @@ export class DashboardService {
       acuracidadeAtual,
       valorTotal,
       tempoInventario,
+      usersPoints,
     };
   }
 }

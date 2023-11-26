@@ -10,7 +10,6 @@ import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
 import { AlocateEnderecoUserDto } from '../dto/alocate-endereco-inventario.dto';
 import { createArrayFkUserId } from 'src/utils/nameInventario/createArrayFkUserId';
-import { userInventarioAssociations } from '../dto/associations-users-inventario.dto';
 
 @Injectable()
 export class BaseInventarioRepository {
@@ -45,6 +44,7 @@ export class BaseInventarioRepository {
             id: true,
             name: true,
             username: true,
+            role: true,
           },
         },
       },

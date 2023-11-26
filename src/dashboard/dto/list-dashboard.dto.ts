@@ -15,4 +15,10 @@ export class ListDashboardDto {
   readonly updated_at?: Date | null;
   readonly username_id?: string | null;
   readonly baseNameInventario_id?: string;
+  readonly user?: {
+    id: string;
+    name: string;
+    username: string;
+    role: string;
+  };
 }
