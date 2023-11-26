@@ -3,10 +3,7 @@ import { ListAllBasePointsUseCase } from './../usecases/list-all-points.usecase'
 import { ListOnePointsUseCase } from './../usecases/list-one-points.usecase';
 import { Injectable } from '@nestjs/common';
 import { ReqUserDto } from 'src/auth/dto/req-user.dto';
-import { DivergeciasAcertos } from 'src/utils/dashboard/divergeciasAcertos';
-import { TotalContagem } from 'src/utils/dashboard/totalContagem';
 import { createPoints } from 'src/utils/points/createPoints';
-import { TotalPointsContagem } from 'src/utils/points/totalPointsContagem';
 
 @Injectable()
 export class PointsService {
@@ -19,17 +16,27 @@ export class PointsService {
   async findPointsOne(req: ReqUserDto) {
     const baseInvExists = await this.listOnePointsUseCase.execute(req);
 
-    const { totalPrimeiraContagem, totalSegundaContagem } =
-      await TotalPointsContagem(baseInvExists);
-    // const { totalPrimeiraContagem, totalSegundaContagem } = await TotalContagem(
-    //   baseInvExists,
-    // );
+    const totals = baseInvExists.reduce(
+      (acc, baseData) => {
+        if (baseData.secondCount !== null) {
+          acc.totalSegundaContagem++;
+        } else {
+          acc.totalPrimeiraContagem++;
+        }
 
-    // const { totalAcertos } = await DivergeciasAcertos(baseInvExists);
+        return acc;
+      },
+      { totalSKU: 0, totalPrimeiraContagem: 0, totalSegundaContagem: 0 },
+    );
 
-    const totalPoints = totalPrimeiraContagem - totalSegundaContagem;
+    const { totalPrimeiraContagem, totalSegundaContagem } = totals;
+
+    const somaTotal = totalPrimeiraContagem + totalSegundaContagem;
+    const pocentagem = 100 - (totalSegundaContagem * 100) / somaTotal;
+    const totalPoints = Number(((somaTotal * pocentagem) / 100).toFixed(2));
 
     return {
+      somaTotal,
       totalPrimeiraContagem,
       totalSegundaContagem,
       totalPoints,

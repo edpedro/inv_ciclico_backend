@@ -5,30 +5,31 @@ export async function createPoints(
   user: UserDto[],
   baseInvExists: ListBaseInventarioDto[],
 ) {
-  const pointsArray = user.map((userData) => {
-    let totalSKU = 0;
-    let totalPrimeiraContagem = 0;
-    let totalSegundaContagem = 0;
-
-    baseInvExists.forEach((baseData) => {
-      if (baseData.username_id === userData.id) {
-        totalSKU++;
-
-        if (baseData.secondCount !== null) {
-          totalSegundaContagem++;
-        } else {
-          totalPrimeiraContagem++;
+  const pointsArray = Object.values(user).map((userData) => {
+    const totals = baseInvExists.reduce(
+      (acc, baseData) => {
+        if (baseData.username_id === userData.id) {
+          acc.totalSKU++;
+          if (baseData.secondCount !== null) {
+            acc.totalSegundaContagem++;
+          } else {
+            acc.totalPrimeiraContagem++;
+          }
         }
-      }
-    });
+        return acc;
+      },
+      { totalSKU: 0, totalPrimeiraContagem: 0, totalSegundaContagem: 0 },
+    );
 
-    const totalPoints = totalPrimeiraContagem - totalSegundaContagem;
+    const somaTotal =
+      totals.totalPrimeiraContagem + totals.totalSegundaContagem;
+    const pocentagem = 100 - (totals.totalSegundaContagem * 100) / somaTotal;
+    const totalPoints = Number(((somaTotal * pocentagem) / 100).toFixed(2));
 
     return {
       id: userData.id,
       name: userData.name,
       username: userData.username,
-      role: userData.role,
       totalPoints,
     };
   });
