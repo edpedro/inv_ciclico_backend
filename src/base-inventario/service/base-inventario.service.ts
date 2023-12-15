@@ -120,9 +120,15 @@ export class BaseInventarioService {
 
     const allEnd = await this.listAllBaseInventarioUseCase.execute(id);
 
+    const idEndRelation = relation.map((end) => end.baseInventario_id);
+
+    const filterIdEndInv = allEnd.filter(
+      (end) => !idEndRelation.includes(end.id),
+    );
+
     const baseInvExists =
-      invExists.length > 0
-        ? invExists
+      invExists.length <= 0
+        ? filterIdEndInv
         : relation.length <= 0
         ? allEnd
         : invExists;
