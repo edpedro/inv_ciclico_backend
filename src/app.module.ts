@@ -7,6 +7,7 @@ import { NameInventarioModule } from './name-inventario/name-inventario.module';
 import { ExportFileModule } from './export-file/export-file.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PointsModule } from './points/points.module';
+import { BackupModule } from './backup/backup.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PointsModule } from './points/points.module';
     ExportFileModule,
     DashboardModule,
     PointsModule,
+    BackupModule,
   ],
   providers: [PrismaService],
 })
