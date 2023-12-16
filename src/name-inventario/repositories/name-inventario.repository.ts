@@ -84,6 +84,8 @@ export class NameInventarioRepository {
         id: true,
         date: true,
         name: true,
+        upload: true,
+        type: true,
         firstStatus: true,
         secondStatus: true,
         user: {
@@ -143,6 +145,7 @@ export class NameInventarioRepository {
       data: {
         name: data.name,
         date: data.date,
+        type: data.type,
       },
     });
   }
