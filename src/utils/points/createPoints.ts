@@ -30,6 +30,7 @@ export async function createPoints(
       id: userData.id,
       name: userData.name,
       username: userData.username,
+      role: userData.role,
       totalPoints,
     };
   });
