@@ -34,6 +34,7 @@ import { ListDataEnderecoBaseInventarioUseCase } from '../usecases/list-data-end
 import { ListRelationUserInvInventarioUseCase } from '../usecases/list-relation-user-inventario.usecase';
 import { ListAllUsersEnderecoBaseInventarioUseCase } from '../usecases/list-all-users-endereco-inventario.usecase';
 import { ListUsersIdsUseCase } from 'src/users/usecases/list-users-ids.usecase';
+import { RemoveAlocateUserInventario } from '../usecases/remove-alocate-user-inventario.usecase';
 
 @Injectable()
 export class BaseInventarioService {
@@ -63,6 +64,7 @@ export class BaseInventarioService {
     private readonly listRelationUserInvInventarioUseCase: ListRelationUserInvInventarioUseCase,
     private readonly listAllUsersEnderecoBaseInventarioUseCase: ListAllUsersEnderecoBaseInventarioUseCase,
     private readonly listUsersIdsUseCase: ListUsersIdsUseCase,
+    private readonly removeAlocateUserInventario: RemoveAlocateUserInventario,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -441,5 +443,40 @@ export class BaseInventarioService {
     }));
 
     return result;
+  }
+  async removeAlocateEnderecoUser(data: AlocateEnderecoUserDto[], id: string) {
+    const invExists = await this.listInventarioUserUseCase.execute(id);
+
+    if (!invExists) {
+      throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
+    }
+    const userIds = [];
+    data.map((value) => userIds.push(...value.user_ids));
+
+    const userOnInvExists = await this.listUserOnInventarioUserUseCase.execute(
+      id,
+      userIds,
+    );
+
+    const userExists = await this.listUsersIdsUseCase.execute(userIds);
+
+    const { isEqual, missingIds } = await verifyUsersEqual(
+      userOnInvExists,
+      userExists,
+    );
+
+    if (!isEqual) {
+      throw new HttpException(
+        `Usuario(s) ${missingIds} não alocado para Inventario`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const result = await this.removeAlocateUserInventario.execute(data, id);
+      return result;
+    } catch (error) {
+      throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
+    }
   }
 }

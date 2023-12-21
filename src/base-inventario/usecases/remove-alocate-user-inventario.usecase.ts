@@ -3,12 +3,12 @@ import { BaseInventarioRepository } from '../repositories/base-inventario.reposi
 import { AlocateEnderecoUserDto } from '../dto/alocate-endereco-inventario.dto';
 
 @Injectable()
-export class ListAllArrayEndereco {
+export class RemoveAlocateUserInventario {
   constructor(
     private readonly baseInventarioRepository: BaseInventarioRepository,
   ) {}
 
-  async execute(data: AlocateEnderecoUserDto, id: string) {
-    return this.baseInventarioRepository.FindAllArrayEndereco(data, id);
+  async execute(data: AlocateEnderecoUserDto[], id: string) {
+    return this.baseInventarioRepository.removeAlocateUserInventario(data, id);
   }
 }

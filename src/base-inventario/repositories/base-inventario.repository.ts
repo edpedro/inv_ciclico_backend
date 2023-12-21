@@ -214,17 +214,6 @@ export class BaseInventarioRepository {
     });
   }
 
-  async FindAllArrayEndereco(data: AlocateEnderecoUserDto, id: string) {
-    // return await this.prisma.baseInventario.findMany({
-    //   where: {
-    //     baseNameInventario_id: id,
-    //     endereco: {
-    //       in: data.baseInventario_id,
-    //     },
-    //   },
-    // });
-  }
-
   async AlocateUserInventario(datas: AlocateEnderecoUserDto[], id: string) {
     const data: AlocateEnderecoUserDto[] = datas;
 
@@ -315,5 +304,32 @@ export class BaseInventarioRepository {
         },
       },
     });
+  }
+  async removeAlocateUserInventario(
+    datas: AlocateEnderecoUserDto[],
+    id: string,
+  ) {
+    const data: AlocateEnderecoUserDto[] = datas;
+
+    for (let index of data) {
+      const maxLen = Math.max(
+        index.user_ids.length,
+        index.baseInventario_ids.length,
+      );
+
+      for (let i = 0; i < maxLen; i++) {
+        const userIDs = index.user_ids[i % index.user_ids.length];
+        const baseInventarioIdS =
+          index.baseInventario_ids[i % index.baseInventario_ids.length];
+
+        await this.prisma.usersOnEnderecos.deleteMany({
+          where: {
+            baseNameInventario_id: id,
+            baseInventario_id: baseInventarioIdS,
+            user_id: userIDs,
+          },
+        });
+      }
+    }
   }
 }

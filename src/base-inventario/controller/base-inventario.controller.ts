@@ -109,4 +109,11 @@ export class BaseInventarioController {
   ) {
     return await this.baseInventarioService.listAlocateEnderecoUserIn(id, req);
   }
+  @Delete('endereco/user/:id')
+  async removeAlocateEnderecoUser(
+    @Body() data: AlocateEnderecoUserDto[],
+    @Param('id') id: string,
+  ) {
+    return await this.baseInventarioService.removeAlocateEnderecoUser(data, id);
+  }
 }
