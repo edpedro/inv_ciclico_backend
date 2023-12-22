@@ -218,24 +218,28 @@ export class BaseInventarioRepository {
     const data: AlocateEnderecoUserDto[] = datas;
 
     for (let index of data) {
-      const maxLen = Math.max(
-        index.user_ids.length,
-        index.baseInventario_ids.length,
-      );
+      const baseInventarioIds = index.baseInventario_ids;
 
-      for (let i = 0; i < maxLen; i++) {
-        const userIDs = index.user_ids[i % index.user_ids.length];
-        const baseInventarioIdS =
-          index.baseInventario_ids[i % index.baseInventario_ids.length];
+      for (const user_id of index.user_ids) {
+        for (const baseInventarioId of baseInventarioIds) {
+          const existingRecord = await this.prisma.usersOnEnderecos.findFirst({
+            where: {
+              user_id: user_id,
+              baseInventario_id: baseInventarioId,
+            },
+          });
 
-        await this.prisma.usersOnEnderecos.create({
-          data: {
-            baseNameInventario_id: id,
-            user_id: userIDs,
-            baseInventario_id: baseInventarioIdS,
-            assignedBy: 'auth',
-          },
-        });
+          if (!existingRecord) {
+            await this.prisma.usersOnEnderecos.create({
+              data: {
+                baseNameInventario_id: id,
+                user_id: user_id,
+                baseInventario_id: baseInventarioId,
+                assignedBy: 'auth',
+              },
+            });
+          }
+        }
       }
     }
   }
@@ -312,23 +316,19 @@ export class BaseInventarioRepository {
     const data: AlocateEnderecoUserDto[] = datas;
 
     for (let index of data) {
-      const maxLen = Math.max(
-        index.user_ids.length,
-        index.baseInventario_ids.length,
-      );
+      const baseInventarioIds = index.baseInventario_ids;
 
-      for (let i = 0; i < maxLen; i++) {
-        const userIDs = index.user_ids[i % index.user_ids.length];
-        const baseInventarioIdS =
-          index.baseInventario_ids[i % index.baseInventario_ids.length];
-
-        await this.prisma.usersOnEnderecos.deleteMany({
-          where: {
-            baseNameInventario_id: id,
-            baseInventario_id: baseInventarioIdS,
-            user_id: userIDs,
-          },
-        });
+      for (const user_id of index.user_ids) {
+        for (const baseInventarioId of baseInventarioIds) {
+          await this.prisma.usersOnEnderecos.deleteMany({
+            where: {
+              baseNameInventario_id: id,
+              user_id: user_id,
+              baseInventario_id: baseInventarioId,
+              assignedBy: 'auth',
+            },
+          });
+        }
       }
     }
   }

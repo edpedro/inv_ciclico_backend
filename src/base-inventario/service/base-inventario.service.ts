@@ -424,6 +424,7 @@ export class BaseInventarioService {
       const result = await this.alocateUserInventario.execute(data, id);
       return result;
     } catch (error) {
+      console.log(error);
       throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
     }
   }
