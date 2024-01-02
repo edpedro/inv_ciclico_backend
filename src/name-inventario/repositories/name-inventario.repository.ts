@@ -216,4 +216,14 @@ export class NameInventarioRepository {
       },
     });
   }
+  async deleteInventarioUploadStatus(id: string) {
+    await this.prisma.baseNameInventario.update({
+      where: {
+        id,
+      },
+      data: {
+        upload: false,
+      },
+    });
+  }
 }

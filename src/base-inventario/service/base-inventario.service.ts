@@ -36,6 +36,7 @@ import { ListAllUsersEnderecoBaseInventarioUseCase } from '../usecases/list-all-
 import { ListUsersIdsUseCase } from 'src/users/usecases/list-users-ids.usecase';
 import { RemoveAlocateUserInventario } from '../usecases/remove-alocate-user-inventario.usecase';
 import { RemoveIdAlocateUserInventario } from '../usecases/removeID-alocate-user-inventario.usecase';
+import { UploadStatusInventarioUseCase } from 'src/name-inventario/usecases/delete-name-update-nameInventario';
 
 @Injectable()
 export class BaseInventarioService {
@@ -67,6 +68,7 @@ export class BaseInventarioService {
     private readonly listUsersIdsUseCase: ListUsersIdsUseCase,
     private readonly removeAlocateUserInventario: RemoveAlocateUserInventario,
     private readonly removeIdAlocateUserInventario: RemoveIdAlocateUserInventario,
+    private readonly uploadStatusInventarioUseCase: UploadStatusInventarioUseCase,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -194,6 +196,8 @@ export class BaseInventarioService {
         id,
         req.user.id,
       );
+
+      await this.uploadStatusInventarioUseCase.execute(id);
 
       if (!nameInvExists) {
         throw new HttpException(
