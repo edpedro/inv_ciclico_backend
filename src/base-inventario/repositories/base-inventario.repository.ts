@@ -9,7 +9,6 @@ import { UpdateBaseInventarioDto } from '../dto/update-base-inventario.dto';
 import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
 import { AlocateEnderecoUserDto } from '../dto/alocate-endereco-inventario.dto';
-import { createArrayFkUserId } from 'src/utils/nameInventario/createArrayFkUserId';
 
 @Injectable()
 export class BaseInventarioRepository {
@@ -331,5 +330,13 @@ export class BaseInventarioRepository {
         }
       }
     }
+  }
+
+  async removeIdAlocateUserInventario(id: string) {
+    await this.prisma.usersOnEnderecos.deleteMany({
+      where: {
+        baseNameInventario_id: id,
+      },
+    });
   }
 }

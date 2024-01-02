@@ -35,6 +35,7 @@ import { ListRelationUserInvInventarioUseCase } from '../usecases/list-relation-
 import { ListAllUsersEnderecoBaseInventarioUseCase } from '../usecases/list-all-users-endereco-inventario.usecase';
 import { ListUsersIdsUseCase } from 'src/users/usecases/list-users-ids.usecase';
 import { RemoveAlocateUserInventario } from '../usecases/remove-alocate-user-inventario.usecase';
+import { RemoveIdAlocateUserInventario } from '../usecases/removeID-alocate-user-inventario.usecase';
 
 @Injectable()
 export class BaseInventarioService {
@@ -65,6 +66,7 @@ export class BaseInventarioService {
     private readonly listAllUsersEnderecoBaseInventarioUseCase: ListAllUsersEnderecoBaseInventarioUseCase,
     private readonly listUsersIdsUseCase: ListUsersIdsUseCase,
     private readonly removeAlocateUserInventario: RemoveAlocateUserInventario,
+    private readonly removeIdAlocateUserInventario: RemoveIdAlocateUserInventario,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -283,6 +285,8 @@ export class BaseInventarioService {
 
       if (resultfirstStatus) {
         await updateFirtsSecond({ firstStatus: true, secondStatus: false });
+
+        await this.removeIdAlocateUserInventario.execute(id);
       }
 
       const resultsecondStatus = inventarios.every((inventario) => {

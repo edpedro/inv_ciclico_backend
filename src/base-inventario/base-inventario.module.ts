@@ -30,6 +30,7 @@ import { ListAllUsersEnderecoBaseInventarioUseCase } from './usecases/list-all-u
 import { ListUsersIdsUseCase } from 'src/users/usecases/list-users-ids.usecase';
 import { UsersRepository } from 'src/users/repositories/users.repository';
 import { RemoveAlocateUserInventario } from './usecases/remove-alocate-user-inventario.usecase';
+import { RemoveIdAlocateUserInventario } from './usecases/removeID-alocate-user-inventario.usecase';
 
 @Module({
   imports: [],
@@ -68,6 +69,7 @@ import { RemoveAlocateUserInventario } from './usecases/remove-alocate-user-inve
     ListAllUsersEnderecoBaseInventarioUseCase,
     ListUsersIdsUseCase,
     RemoveAlocateUserInventario,
+    RemoveIdAlocateUserInventario,
   ],
 })
 export class BaseInventarioModule {}
