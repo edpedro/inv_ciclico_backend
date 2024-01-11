@@ -1,12 +1,15 @@
 import { ListBaseInventarioDto } from './../../base-inventario/dto/list-base-inventario.dto';
 import { UserDto } from 'src/users/dto/user.dto';
+import { filterPointsYear } from './filterPointsYear';
 
 export async function createPoints(
   user: UserDto[],
   baseInvExists: ListBaseInventarioDto[],
 ) {
+  const filterYear2024 = await filterPointsYear(baseInvExists);
+
   const pointsArray = Object.values(user).map((userData) => {
-    const totals = baseInvExists.reduce(
+    const totals = filterYear2024.reduce(
       (acc, baseData) => {
         if (baseData.username_id === userData.id) {
           acc.totalSKU++;

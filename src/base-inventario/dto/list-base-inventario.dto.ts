@@ -13,4 +13,5 @@ export class ListBaseInventarioDto {
   readonly secondStatus?: boolean;
   readonly baseNameInventario_id?: string;
   readonly username_id?: string;
+  readonly created_at?: Date;
 }
