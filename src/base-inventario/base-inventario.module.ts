@@ -32,6 +32,8 @@ import { UsersRepository } from 'src/users/repositories/users.repository';
 import { RemoveAlocateUserInventario } from './usecases/remove-alocate-user-inventario.usecase';
 import { RemoveIdAlocateUserInventario } from './usecases/removeID-alocate-user-inventario.usecase';
 import { UploadStatusInventarioUseCase } from 'src/name-inventario/usecases/delete-name-update-nameInventario';
+import { ListAllAdressUserCase } from 'src/adresses/usecases/list-all-adresses.usercase';
+import { AdressesRepository } from 'src/adresses/repositories/adresses.repository';
 
 @Module({
   imports: [],
@@ -72,6 +74,8 @@ import { UploadStatusInventarioUseCase } from 'src/name-inventario/usecases/dele
     RemoveAlocateUserInventario,
     RemoveIdAlocateUserInventario,
     UploadStatusInventarioUseCase,
+    ListAllAdressUserCase,
+    AdressesRepository,
   ],
 })
 export class BaseInventarioModule {}

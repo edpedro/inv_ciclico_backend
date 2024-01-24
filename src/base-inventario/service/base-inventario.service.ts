@@ -37,6 +37,8 @@ import { ListUsersIdsUseCase } from 'src/users/usecases/list-users-ids.usecase';
 import { RemoveAlocateUserInventario } from '../usecases/remove-alocate-user-inventario.usecase';
 import { RemoveIdAlocateUserInventario } from '../usecases/removeID-alocate-user-inventario.usecase';
 import { UploadStatusInventarioUseCase } from 'src/name-inventario/usecases/delete-name-update-nameInventario';
+import { ListAllAdressUserCase } from 'src/adresses/usecases/list-all-adresses.usercase';
+import { createDataAdresses } from 'src/utils/Adresses/createDataAdresses';
 
 @Injectable()
 export class BaseInventarioService {
@@ -69,6 +71,7 @@ export class BaseInventarioService {
     private readonly removeAlocateUserInventario: RemoveAlocateUserInventario,
     private readonly removeIdAlocateUserInventario: RemoveIdAlocateUserInventario,
     private readonly uploadStatusInventarioUseCase: UploadStatusInventarioUseCase,
+    private readonly listAllAdressUserCase: ListAllAdressUserCase,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -105,14 +108,18 @@ export class BaseInventarioService {
     return createInventario;
   }
 
-  async listBaseInventario(id: string) {
+  async listBaseInventario(id: string, req: ReqUserDto) {
     const baseInvExists = await this.listAllBaseInventarioUseCase.execute(id);
+
+    const adresses = await this.listAllAdressUserCase.execute(req.user.id);
 
     if (baseInvExists.length <= 0) {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
 
-    return baseInvExists;
+    const data = await createDataAdresses(adresses, baseInvExists);
+
+    return data;
   }
   async listTotalEndereco(id: string, req: ReqUserDto) {
     const invExists = await this.ListDataEnderecoBaseInventarioUseCase.execute(

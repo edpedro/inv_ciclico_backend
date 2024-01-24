@@ -26,6 +26,7 @@ model User {
   baseNameInventario BaseNameInventario[]
   baseNameInventarios NameInventarioOnUsers[]
   baseInventarios UsersOnEnderecos[]
+  adresses Adresses[]
   
   @@map("users")
 }
@@ -107,4 +108,17 @@ model UsersOnEnderecos {
   assignedBy String
 
   @@id([user_id, baseInventario_id])
+}
+
+model Adresses {
+  id        Int      @default(autoincrement()) @id 
+  name String
+  codeAdress Int
+  descriptionAdress String
+  create_id String
+
+  user User @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("adresses") 
 }

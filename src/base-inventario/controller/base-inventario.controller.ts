@@ -39,8 +39,8 @@ export class BaseInventarioController {
   }
 
   @Get(':id')
-  async listInventario(@Param('id') id: string, @Req() req: any) {
-    return await this.baseInventarioService.listBaseInventario(id);
+  async listInventario(@Param('id') id: string, @Req() req: ReqUserDto) {
+    return await this.baseInventarioService.listBaseInventario(id, req);
   }
 
   @Get('endereco/:id')
