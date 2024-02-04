@@ -39,6 +39,7 @@ import { RemoveIdAlocateUserInventario } from '../usecases/removeID-alocate-user
 import { UploadStatusInventarioUseCase } from 'src/name-inventario/usecases/delete-name-update-nameInventario';
 import { ListAllAdressUserCase } from 'src/adresses/usecases/list-all-adresses.usercase';
 import { createDataAdresses } from 'src/utils/Adresses/createDataAdresses';
+import { ListBaseInventarioDto } from '../dto/list-base-inventario.dto';
 
 @Injectable()
 export class BaseInventarioService {
@@ -117,7 +118,10 @@ export class BaseInventarioService {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
     }
 
-    const data = await createDataAdresses(adresses, baseInvExists);
+    const data: ListBaseInventarioDto[] = await createDataAdresses(
+      adresses,
+      baseInvExists,
+    );
 
     return data;
   }
