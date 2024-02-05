@@ -40,6 +40,7 @@ import { UploadStatusInventarioUseCase } from 'src/name-inventario/usecases/dele
 import { ListAllAdressUserCase } from 'src/adresses/usecases/list-all-adresses.usercase';
 import { createDataAdresses } from 'src/utils/Adresses/createDataAdresses';
 import { ListBaseInventarioDto } from '../dto/list-base-inventario.dto';
+import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
 
 @Injectable()
 export class BaseInventarioService {
@@ -73,6 +74,7 @@ export class BaseInventarioService {
     private readonly removeIdAlocateUserInventario: RemoveIdAlocateUserInventario,
     private readonly uploadStatusInventarioUseCase: UploadStatusInventarioUseCase,
     private readonly listAllAdressUserCase: ListAllAdressUserCase,
+    private readonly listUserOneUseCase: ListUserOneUseCase,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -112,7 +114,11 @@ export class BaseInventarioService {
   async listBaseInventario(id: string, req: ReqUserDto) {
     const baseInvExists = await this.listAllBaseInventarioUseCase.execute(id);
 
-    const adresses = await this.listAllAdressUserCase.execute(req.user.id);
+    const createId = await this.listUserOneUseCase.execute(req.user.id);
+
+    const adresses = await this.listAllAdressUserCase.execute(
+      createId.createdById,
+    );
 
     if (baseInvExists.length <= 0) {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);

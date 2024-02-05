@@ -92,6 +92,7 @@ export class UsersRepository {
         name: true,
         username: true,
         role: true,
+        createdById: true,
       },
     });
 
