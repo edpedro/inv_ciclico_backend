@@ -116,9 +116,10 @@ export class BaseInventarioService {
 
     const createId = await this.listUserOneUseCase.execute(req.user.id);
 
-    const adresses = await this.listAllAdressUserCase.execute(
-      createId.createdById,
-    );
+    const userByid =
+      createId.createdById === null ? req.user.id : createId.createdById;
+
+    const adresses = await this.listAllAdressUserCase.execute(userByid);
 
     if (baseInvExists.length <= 0) {
       throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
