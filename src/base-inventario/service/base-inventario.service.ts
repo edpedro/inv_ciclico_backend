@@ -41,6 +41,11 @@ import { ListAllAdressUserCase } from 'src/adresses/usecases/list-all-adresses.u
 import { createDataAdresses } from 'src/utils/Adresses/createDataAdresses';
 import { ListBaseInventarioDto } from '../dto/list-base-inventario.dto';
 import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
+import { StoreItemInventarioDto } from '../dto/store-item-inventario.dto';
+import { ListOneInventarioUseCase } from 'src/name-inventario/usecases/list-one-nameInventario.usecase';
+import { FindItemInventario } from '../usecases/find-item-inventario.usecase';
+import { StoreNewItemInventario } from '../usecases/store-item-inventario.usecase';
+import { CreateItemInventarioDto } from '../dto/create-item-inventario.dto';
 
 @Injectable()
 export class BaseInventarioService {
@@ -75,6 +80,9 @@ export class BaseInventarioService {
     private readonly uploadStatusInventarioUseCase: UploadStatusInventarioUseCase,
     private readonly listAllAdressUserCase: ListAllAdressUserCase,
     private readonly listUserOneUseCase: ListUserOneUseCase,
+    private readonly listOneInventarioUseCase: ListOneInventarioUseCase,
+    private readonly findItemInventario: FindItemInventario,
+    private readonly storeNewItemInventario: StoreNewItemInventario,
   ) {}
 
   async uploadInventario(file: UploadDto, dataInventario: UploadDto, req: any) {
@@ -501,6 +509,48 @@ export class BaseInventarioService {
 
     try {
       const result = await this.removeAlocateUserInventario.execute(data, id);
+      return result;
+    } catch (error) {
+      throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async storeItemInventario(
+    dataStore: StoreItemInventarioDto,
+    id: string,
+    req: ReqUserDto,
+  ) {
+    const nameInvExists = await this.listOneInventarioUseCase.execute(id);
+
+    if (!nameInvExists) {
+      throw new HttpException('Dados não encontrados', HttpStatus.BAD_REQUEST);
+    }
+
+    const createId = await this.listUserOneUseCase.execute(req.user.id);
+
+    const userByid =
+      createId.createdById === null ? req.user.id : createId.createdById;
+
+    const adresses = await this.listAllAdressUserCase.execute(userByid);
+
+    const newAdress = adresses.find(
+      (adress) => adress.codeAdress === dataStore.endereco,
+    );
+
+    const result = await this.findItemInventario.execute(
+      dataStore.item.toUpperCase(),
+    );
+
+    const data: CreateItemInventarioDto = {
+      item: dataStore.item,
+      endereco: newAdress.descriptionAdress,
+      descricao: result ? result.descricao : '',
+      firstCount: dataStore.firstCount,
+    };
+
+    try {
+      const result = await this.storeNewItemInventario.execute(data, id, req);
+
       return result;
     } catch (error) {
       throw new HttpException('Dados não atualizado', HttpStatus.BAD_REQUEST);

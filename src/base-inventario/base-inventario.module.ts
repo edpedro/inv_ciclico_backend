@@ -36,6 +36,9 @@ import { ListAllAdressUserCase } from 'src/adresses/usecases/list-all-adresses.u
 import { AdressesRepository } from 'src/adresses/repositories/adresses.repository';
 import { ListUsersInvitedUseCase } from 'src/users/usecases/list-users-invited.usecase';
 import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
+import { StoreNewItemInventario } from './usecases/store-item-inventario.usecase';
+import { ListOneInventarioUseCase } from 'src/name-inventario/usecases/list-one-nameInventario.usecase';
+import { FindItemInventario } from './usecases/find-item-inventario.usecase';
 
 @Module({
   imports: [],
@@ -80,6 +83,9 @@ import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
     AdressesRepository,
     ListUsersInvitedUseCase,
     ListUserOneUseCase,
+    StoreNewItemInventario,
+    ListOneInventarioUseCase,
+    FindItemInventario,
   ],
 })
 export class BaseInventarioModule {}

@@ -22,6 +22,7 @@ import { UpdateWmsInventarioDto } from '../dto/update-wms-inventario.dto';
 import { ListItemHistoricoDto } from '../dto/list-historico.item.dto';
 import { AlocateEnderecoUserDto } from '../dto/alocate-endereco-inventario.dto';
 import { ReqUserDto } from 'src/auth/dto/req-user.dto';
+import { StoreItemInventarioDto } from '../dto/store-item-inventario.dto';
 
 @Controller('ciclico')
 @UseGuards(AuthGuard('jwt'))
@@ -115,5 +116,14 @@ export class BaseInventarioController {
     @Param('id') id: string,
   ) {
     return await this.baseInventarioService.removeAlocateEnderecoUser(data, id);
+  }
+
+  @Post('store/:id')
+  async storeItem(
+    @Body() data: StoreItemInventarioDto,
+    @Param('id') id: string,
+    @Req() req: ReqUserDto,
+  ) {
+    return await this.baseInventarioService.storeItemInventario(data, id, req);
   }
 }
