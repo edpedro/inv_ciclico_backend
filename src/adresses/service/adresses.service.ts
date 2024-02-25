@@ -7,6 +7,7 @@ import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 import { ListAllAdressUserCase } from '../usecases/list-all-adresses.usercase';
 import { DeleteAllAdressUserCase } from '../usecases/delete-all-adresses.usercase';
 import { ListIdAdressUserCase } from '../usecases/list-id-adresses.usercase';
+import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
 
 @Injectable()
 export class AdressesService {
@@ -16,6 +17,7 @@ export class AdressesService {
     private readonly listAllAdressUserCase: ListAllAdressUserCase,
     private readonly deleteAllAdressUserCase: DeleteAllAdressUserCase,
     private readonly listIdAdressUserCase: ListIdAdressUserCase,
+    private readonly listUserOneUseCase: ListUserOneUseCase,
   ) {}
 
   async uploadAdress(
@@ -39,7 +41,12 @@ export class AdressesService {
   }
 
   async findAllAdress(req: ReqUserDto) {
-    const adresses = await this.listAllAdressUserCase.execute(req.user.id);
+    const createId = await this.listUserOneUseCase.execute(req.user.id);
+
+    const userByid =
+      createId.createdById === null ? req.user.id : createId.createdById;
+
+    const adresses = await this.listAllAdressUserCase.execute(userByid);
 
     return adresses;
   }

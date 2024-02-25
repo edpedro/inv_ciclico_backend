@@ -8,6 +8,8 @@ import { ListOneAdressUserCase } from './usecases/list-one-adresses.usercase';
 import { ListAllAdressUserCase } from './usecases/list-all-adresses.usercase';
 import { DeleteAllAdressUserCase } from './usecases/delete-all-adresses.usercase';
 import { ListIdAdressUserCase } from './usecases/list-id-adresses.usercase';
+import { UsersRepository } from 'src/users/repositories/users.repository';
+import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
 
 @Module({
   controllers: [AdressesController],
@@ -15,11 +17,13 @@ import { ListIdAdressUserCase } from './usecases/list-id-adresses.usercase';
     AdressesService,
     PrismaService,
     AdressesRepository,
+    UsersRepository,
     CreateAdressUserCase,
     ListOneAdressUserCase,
     ListAllAdressUserCase,
     DeleteAllAdressUserCase,
     ListIdAdressUserCase,
+    ListUserOneUseCase,
   ],
 })
 export class AdressesModule {}
