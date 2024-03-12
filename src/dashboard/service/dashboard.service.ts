@@ -41,6 +41,7 @@ export class DashboardService {
       tempoInventario,
       usersPoints,
       indicadorDesempenho,
+      evolucaoPorRua,
     } = await DashboardCreate(resultDash);
 
     return {
@@ -62,6 +63,7 @@ export class DashboardService {
       tempoInventario,
       usersPoints,
       indicadorDesempenho,
+      evolucaoPorRua,
     };
   }
 }

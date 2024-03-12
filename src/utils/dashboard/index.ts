@@ -13,6 +13,7 @@ import { ValorContagem } from './valorContagem';
 import { TempoInventario } from './tempoInventario';
 import { UsersPoints } from './usersPoints';
 import { IndicadoresDesempenho } from './indicadoresDesempenho';
+import { EvolucaoPorRua } from './evolucaoPorRua';
 
 export async function DashboardCreate(data: ListDashboardDto[]) {
   const removeDuplicatesItem = await RemoveDuplicatesItem(data);
@@ -49,6 +50,8 @@ export async function DashboardCreate(data: ListDashboardDto[]) {
 
   const indicadorDesempenho = await IndicadoresDesempenho(data);
 
+  const evolucaoPorRua = await EvolucaoPorRua(data);
+
   return {
     totalSKU,
     removeDuplicatesEndereco,
@@ -69,5 +72,6 @@ export async function DashboardCreate(data: ListDashboardDto[]) {
     tempoInventario,
     usersPoints,
     indicadorDesempenho,
+    evolucaoPorRua,
   };
 }
