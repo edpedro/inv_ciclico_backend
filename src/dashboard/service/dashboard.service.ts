@@ -40,6 +40,7 @@ export class DashboardService {
       valorTotal,
       tempoInventario,
       usersPoints,
+      indicadorDesempenho,
     } = await DashboardCreate(resultDash);
 
     return {
@@ -60,6 +61,7 @@ export class DashboardService {
       valorTotal,
       tempoInventario,
       usersPoints,
+      indicadorDesempenho,
     };
   }
 }

@@ -12,6 +12,7 @@ import { AcuracidadeAtual } from './acuracidadeAtual';
 import { ValorContagem } from './valorContagem';
 import { TempoInventario } from './tempoInventario';
 import { UsersPoints } from './usersPoints';
+import { IndicadoresDesempenho } from './indicadoresDesempenho';
 
 export async function DashboardCreate(data: ListDashboardDto[]) {
   const removeDuplicatesItem = await RemoveDuplicatesItem(data);
@@ -46,6 +47,8 @@ export async function DashboardCreate(data: ListDashboardDto[]) {
 
   const usersPoints = await UsersPoints(data);
 
+  const indicadorDesempenho = await IndicadoresDesempenho(data);
+
   return {
     totalSKU,
     removeDuplicatesEndereco,
@@ -65,5 +68,6 @@ export async function DashboardCreate(data: ListDashboardDto[]) {
     valorTotal,
     tempoInventario,
     usersPoints,
+    indicadorDesempenho,
   };
 }
