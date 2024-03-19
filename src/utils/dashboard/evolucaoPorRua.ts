@@ -35,9 +35,12 @@ export async function EvolucaoPorRua(data: ListDashboardDto[]) {
 
     const { evolucaoContagem } = await Evolucao(filter, totalEndereco);
 
+    const evol = parseFloat(evolucaoContagem); // Convertendo para número
+    const evolDecimais = Math.floor(evol); // Removendo os números após o ponto decimal
+
     evolucaoRua.push({
       Rua: end[index],
-      EvolRua: evolucaoContagem,
+      EvolRua: evolDecimais,
     });
   }
 
