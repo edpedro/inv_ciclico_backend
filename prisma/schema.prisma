@@ -27,6 +27,8 @@ model User {
   baseNameInventarios NameInventarioOnUsers[]
   baseInventarios UsersOnEnderecos[]
   adresses Adresses[]
+  nameProtocols NameProtocols[]
+  baseSerial BaseSerial[]
   
   @@map("users")
 }
@@ -121,4 +123,49 @@ model Adresses {
   user_id String
 
   @@map("adresses") 
+}
+
+model NameProtocols {
+  id    String      @id @default(uuid())
+  name String
+  date String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  user_id String
+
+  protocols Protocols[]
+
+  @@map("nameProtocols") 
+}
+
+model Protocols {
+  id        Int      @default(autoincrement()) @id
+  codigo String
+  serial String
+  caixa Int  
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+ nameProtocols NameProtocols @relation(fields: [nameProtocols_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+ nameProtocols_id String
+
+  @@map("protocols") 
+}
+
+model BaseSerial {
+  id        Int      @default(autoincrement()) @id
+  codigo String
+  serial String
+  deposit String
+  center String 
+  status String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("baseSerial") 
 }

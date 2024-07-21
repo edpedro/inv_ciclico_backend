@@ -9,6 +9,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { PointsModule } from './points/points.module';
 import { BackupModule } from './backup/backup.module';
 import { AdressesModule } from './adresses/adresses.module';
+import { NameProtocolModule } from './name-protocol/name-protocol.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AdressesModule } from './adresses/adresses.module';
     PointsModule,
     BackupModule,
     AdressesModule,
+    NameProtocolModule,
   ],
   providers: [PrismaService],
 })
