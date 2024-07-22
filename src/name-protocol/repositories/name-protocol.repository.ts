@@ -65,6 +65,18 @@ export class NameProtocolRepository {
     });
   }
 
+  async findIdAllProtocolName(
+    uniquesIds: string[],
+  ): Promise<ListNameProtocolDto[]> {
+    return await this.prisma.nameProtocols.findMany({
+      where: {
+        id: {
+          in: uniquesIds,
+        },
+      },
+    });
+  }
+
   async updateProtocolName(
     id: string,
     newDate: UpdateNameProtocolDto,

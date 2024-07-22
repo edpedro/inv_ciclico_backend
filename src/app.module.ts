@@ -10,6 +10,7 @@ import { PointsModule } from './points/points.module';
 import { BackupModule } from './backup/backup.module';
 import { AdressesModule } from './adresses/adresses.module';
 import { NameProtocolModule } from './name-protocol/name-protocol.module';
+import { BaseProtocolModule } from './base-protocol/base-protocol.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { NameProtocolModule } from './name-protocol/name-protocol.module';
     BackupModule,
     AdressesModule,
     NameProtocolModule,
+    BaseProtocolModule,
   ],
   providers: [PrismaService],
 })

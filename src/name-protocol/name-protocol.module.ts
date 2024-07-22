@@ -9,6 +9,7 @@ import { ListAllNameProtocolUseCase } from './usecases/list-all-nameProtocol.use
 import { ListIdNameProtocolUseCase } from './usecases/list-id-nameProtocol.usecase';
 import { DeleteNameProtocolUseCase } from './usecases/delete-nameProtocol.usecase';
 import { UpdateNameProtocolUseCase } from './usecases/update-nameProtocol.usecase';
+import { ListIdAllNameProtocolUseCase } from './usecases/list-idAll-nameProtocol.usecase';
 
 @Module({
   controllers: [NameProtocolController],
@@ -22,6 +23,7 @@ import { UpdateNameProtocolUseCase } from './usecases/update-nameProtocol.usecas
     ListIdNameProtocolUseCase,
     DeleteNameProtocolUseCase,
     UpdateNameProtocolUseCase,
+    ListIdAllNameProtocolUseCase,
   ],
 })
 export class NameProtocolModule {}
