@@ -10,6 +10,7 @@ import { ListIdNameProtocolUseCase } from 'src/name-protocol/usecases/list-id-na
 import { ListAllProtocolUseCase } from './usecases/list-all-baseProtocol.usecase';
 import { ListSerialProtocolUseCase } from './usecases/list-serial-baseProtocol.usecase';
 import { DeleteSerialProtocolUseCase } from './usecases/delete-serial-baseProtocol.usecase';
+import { ListAllNameProtocolUseCase } from 'src/name-protocol/usecases/list-all-nameProtocol.usecase';
 
 @Module({
   controllers: [BaseProtocolController],
@@ -24,6 +25,7 @@ import { DeleteSerialProtocolUseCase } from './usecases/delete-serial-baseProtoc
     ListAllProtocolUseCase,
     ListSerialProtocolUseCase,
     DeleteSerialProtocolUseCase,
+    ListAllNameProtocolUseCase,
   ],
 })
 export class BaseProtocolModule {}

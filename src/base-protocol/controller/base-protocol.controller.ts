@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Query,
   Param,
   Delete,
@@ -11,15 +10,14 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BaseProtocolService } from '../service/base-protocol.service';
-import { UpdateBaseProtocolDto } from '../dto/update-base-protocol.dto';
 import { BaseProtocolsDto } from 'src/utils/baseProtocol/CreateProtocolDto';
 
 @Controller('protocol')
+@UseGuards(AuthGuard('jwt'))
 export class BaseProtocolController {
   constructor(private readonly baseProtocolService: BaseProtocolService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
   create(@Body() data: BaseProtocolsDto) {
     return this.baseProtocolService.create(data);
   }

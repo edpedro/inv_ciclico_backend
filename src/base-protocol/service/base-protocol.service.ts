@@ -1,11 +1,9 @@
 import { DeleteSerialProtocolUseCase } from './../usecases/delete-serial-baseProtocol.usecase';
 import { ListSerialProtocolUseCase } from './../usecases/list-serial-baseProtocol.usecase';
 import { ListAllProtocolUseCase } from './../usecases/list-all-baseProtocol.usecase';
-import { ListIdNameProtocolUseCase } from './../../name-protocol/usecases/list-id-nameProtocol.usecase';
 import { ListIdAllNameProtocolUseCase } from './../../name-protocol/usecases/list-idAll-nameProtocol.usecase';
 import { CreateBaseProtocolUseCase } from './../usecases/create-baseProtocol.usecase';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { UpdateBaseProtocolDto } from '../dto/update-base-protocol.dto';
 import { BaseProtocolsDto } from 'src/utils/baseProtocol/CreateProtocolDto';
 
 @Injectable()

@@ -8,7 +8,7 @@ export class ListAllNameProtocolUseCase {
     private readonly nameProtocolRepository: NameProtocolRepository,
   ) {}
 
-  async execute(req: ReqUserDto) {
-    return this.nameProtocolRepository.findAllProtocolName(req);
+  async execute(id: string) {
+    return this.nameProtocolRepository.findAllProtocolName(id);
   }
 }

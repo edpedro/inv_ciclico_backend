@@ -7,7 +7,7 @@ export class ListSerialProtocolUseCase {
     private readonly baseProtocolRepository: BaseProtocolRepository,
   ) {}
 
-  async execute(id: string) {
-    return this.baseProtocolRepository.findOneSerialProtocol(id);
+  async execute(serial: string) {
+    return this.baseProtocolRepository.findOneSerialProtocol(serial);
   }
 }

@@ -158,9 +158,9 @@ model BaseSerial {
   id        Int      @default(autoincrement()) @id
   codigo String
   serial String
-  deposit String
-  center String 
-  status String
+  deposit String?
+  center String?
+  status String?
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
 

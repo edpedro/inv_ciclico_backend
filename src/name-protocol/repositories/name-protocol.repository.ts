@@ -30,10 +30,10 @@ export class NameProtocolRepository {
     });
   }
 
-  async findAllProtocolName(req: ReqUserDto): Promise<ListNameProtocolDto[]> {
+  async findAllProtocolName(id: string): Promise<ListNameProtocolDto[]> {
     return await this.prisma.nameProtocols.findMany({
       where: {
-        user_id: req.user.id,
+        user_id: id,
       },
       include: {
         user: {

@@ -14,6 +14,6 @@ export class UploadDto {
 export const multerOptions: MulterOptions = {
   storage: memoryStorage(),
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB max file size
+    fileSize: 50 * 1024 * 1024, // 50MB max file size
   },
 };

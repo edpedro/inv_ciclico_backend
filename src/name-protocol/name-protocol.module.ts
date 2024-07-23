@@ -10,6 +10,9 @@ import { ListIdNameProtocolUseCase } from './usecases/list-id-nameProtocol.useca
 import { DeleteNameProtocolUseCase } from './usecases/delete-nameProtocol.usecase';
 import { UpdateNameProtocolUseCase } from './usecases/update-nameProtocol.usecase';
 import { ListIdAllNameProtocolUseCase } from './usecases/list-idAll-nameProtocol.usecase';
+import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
+import { UsersRepository } from 'src/users/repositories/users.repository';
+import { ListUsersInvitedUseCase } from 'src/users/usecases/list-users-invited.usecase';
 
 @Module({
   controllers: [NameProtocolController],
@@ -17,6 +20,7 @@ import { ListIdAllNameProtocolUseCase } from './usecases/list-idAll-nameProtocol
     PrismaService,
     NameProtocolService,
     NameProtocolRepository,
+    UsersRepository,
     CreateNameProtocolUseCase,
     ListNameProtocolUseCase,
     ListAllNameProtocolUseCase,
@@ -24,6 +28,8 @@ import { ListIdAllNameProtocolUseCase } from './usecases/list-idAll-nameProtocol
     DeleteNameProtocolUseCase,
     UpdateNameProtocolUseCase,
     ListIdAllNameProtocolUseCase,
+    ListUserOneUseCase,
+    ListUsersInvitedUseCase,
   ],
 })
 export class NameProtocolModule {}

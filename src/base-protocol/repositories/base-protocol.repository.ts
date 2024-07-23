@@ -39,6 +39,13 @@ export class BaseProtocolRepository {
           equals: serialProt,
         },
       },
+      include: {
+        nameProtocols: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   }
 
