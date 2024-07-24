@@ -1,3 +1,5 @@
+import { ListUsersInvitedUseCase } from './../../users/usecases/list-users-invited.usecase';
+import { ListUserOneUseCase } from './../../users/usecases/list-user-one.usecase';
 import { DeleteSerialProtocolUseCase } from './../usecases/delete-serial-baseProtocol.usecase';
 import { ListSerialProtocolUseCase } from './../usecases/list-serial-baseProtocol.usecase';
 import { ListAllProtocolUseCase } from './../usecases/list-all-baseProtocol.usecase';
@@ -5,6 +7,7 @@ import { ListIdAllNameProtocolUseCase } from './../../name-protocol/usecases/lis
 import { CreateBaseProtocolUseCase } from './../usecases/create-baseProtocol.usecase';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { BaseProtocolsDto } from 'src/utils/baseProtocol/CreateProtocolDto';
+import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 
 @Injectable()
 export class BaseProtocolService {
@@ -14,6 +17,8 @@ export class BaseProtocolService {
     private readonly listAllProtocolUseCase: ListAllProtocolUseCase,
     private readonly listSerialProtocolUseCase: ListSerialProtocolUseCase,
     private readonly deleteSerialProtocolUseCase: DeleteSerialProtocolUseCase,
+    private readonly listUserOneUseCase: ListUserOneUseCase,
+    private readonly listUsersInvitedUseCase: ListUsersInvitedUseCase,
   ) {}
 
   async create(data: BaseProtocolsDto) {
@@ -50,9 +55,39 @@ export class BaseProtocolService {
     }
   }
 
-  async findAll(id: string) {
+  async findIdProtocol(id: string) {
     const result = await this.listAllProtocolUseCase.execute(id);
     return result;
+  }
+
+  async findAll(req: ReqUserDto) {
+    const user = await this.listUserOneUseCase.execute(req.user.id);
+
+    if (!user.createdById) {
+      const invitedUsers = await this.listUsersInvitedUseCase.execute(
+        req.user.id,
+      );
+
+      const invitedUserProtocols = await Promise.all(
+        invitedUsers.map((invitedUser) =>
+          this.listAllProtocolUseCase.execute(invitedUser.id),
+        ),
+      );
+
+      const currentUserProtocols = await this.listAllProtocolUseCase.execute(
+        req.user.id,
+      );
+
+      const allProtocols = [currentUserProtocols, ...invitedUserProtocols];
+
+      return allProtocols.flat();
+    } else {
+      const currentUserProtocols = await this.listAllProtocolUseCase.execute(
+        req.user.id,
+      );
+
+      return currentUserProtocols;
+    }
   }
 
   async remove(serial: string) {

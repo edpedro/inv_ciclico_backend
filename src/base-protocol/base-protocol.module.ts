@@ -11,6 +11,9 @@ import { ListAllProtocolUseCase } from './usecases/list-all-baseProtocol.usecase
 import { ListSerialProtocolUseCase } from './usecases/list-serial-baseProtocol.usecase';
 import { DeleteSerialProtocolUseCase } from './usecases/delete-serial-baseProtocol.usecase';
 import { ListAllNameProtocolUseCase } from 'src/name-protocol/usecases/list-all-nameProtocol.usecase';
+import { UsersRepository } from 'src/users/repositories/users.repository';
+import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
+import { ListUsersInvitedUseCase } from 'src/users/usecases/list-users-invited.usecase';
 
 @Module({
   controllers: [BaseProtocolController],
@@ -19,6 +22,7 @@ import { ListAllNameProtocolUseCase } from 'src/name-protocol/usecases/list-all-
     PrismaService,
     BaseProtocolRepository,
     NameProtocolRepository,
+    UsersRepository,
     CreateBaseProtocolUseCase,
     ListIdAllNameProtocolUseCase,
     ListIdNameProtocolUseCase,
@@ -26,6 +30,8 @@ import { ListAllNameProtocolUseCase } from 'src/name-protocol/usecases/list-all-
     ListSerialProtocolUseCase,
     DeleteSerialProtocolUseCase,
     ListAllNameProtocolUseCase,
+    ListUserOneUseCase,
+    ListUsersInvitedUseCase,
   ],
 })
 export class BaseProtocolModule {}
