@@ -10,8 +10,27 @@ import { ListSerialBaseSerialUseCase } from './usecases/list-serial-base-serial.
 import { ListSerialProtocolUseCase } from 'src/base-protocol/usecases/list-serial-baseProtocol.usecase';
 import { BaseProtocolRepository } from 'src/base-protocol/repositories/base-protocol.repository';
 import { RemoveBaseSerialUseCase } from './usecases/romove-base-serial.usecase';
+import { BullModule } from '@nestjs/bull';
+import { BaseSerialProcessor } from './processors/base-serial.processor';
+import { ListAllCountBaseSerialUseCase } from './usecases/list-all-base-serial.usecase';
+import { CreateStatusJobUserUseCase } from './usecases/create-statusJob-serial.usecase';
+import { ListAllStatusJobsUserCase } from './usecases/list-all-statusJobs-serial.usecase';
+import { ListAllChunksBaseSerialUseCase } from './usecases/list-chuncks-base-serial.usecase';
+import { ListAllCodigoBaseSerialUseCase } from './usecases/list-codigo-base-serial.usecase ';
+import { RemoveCodigoBaseSerialUseCase } from './usecases/romove-codigo-base-serial.usecase';
+import { RedisModule } from 'src/redis.module';
 
 @Module({
+  imports: [
+    BullModule.registerQueue({
+      name: 'baseSerialQueue',
+      settings: {
+        stalledInterval: 60000, // Verifica a cada 60 segundos se há jobs travados
+        maxStalledCount: 2, // Permite que um job seja travado no máximo 2 vezes
+      },
+    }),
+    RedisModule,
+  ],
   controllers: [BaseSerialController],
   providers: [
     BaseSerialService,
@@ -24,6 +43,13 @@ import { RemoveBaseSerialUseCase } from './usecases/romove-base-serial.usecase';
     ListSerialBaseSerialUseCase,
     ListSerialProtocolUseCase,
     RemoveBaseSerialUseCase,
+    BaseSerialProcessor,
+    ListAllCountBaseSerialUseCase,
+    CreateStatusJobUserUseCase,
+    ListAllStatusJobsUserCase,
+    ListAllChunksBaseSerialUseCase,
+    ListAllCodigoBaseSerialUseCase,
+    RemoveCodigoBaseSerialUseCase,
   ],
 })
 export class BaseSerialModule {}

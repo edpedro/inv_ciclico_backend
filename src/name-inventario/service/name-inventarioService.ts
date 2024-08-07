@@ -53,13 +53,17 @@ export class NameInventarioService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    try {
+      const createName = await this.createNameInventarioUseCase.execute(
+        data,
+        req,
+      );
 
-    const createName = await this.createNameInventarioUseCase.execute(
-      data,
-      req,
-    );
-
-    return createName;
+      return createName;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException('Dados não cadastrado', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async findIdName(id: string, req: ReqUserDto) {

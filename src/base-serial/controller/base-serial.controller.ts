@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Req,
+  Param,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -19,11 +20,34 @@ import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 @UseGuards(AuthGuard('jwt'))
 export class BaseSerialController {
   constructor(private readonly baseSerialService: BaseSerialService) {}
-
   @Post()
   @UseInterceptors(FileInterceptor('file', multerOptions))
-  create(@UploadedFile() file: UploadDto, @Req() req: ReqUserDto) {
-    return this.baseSerialService.create(file, req);
+  async create(@UploadedFile() file: UploadDto, @Req() req: ReqUserDto) {
+    const { jobId, message } = await this.baseSerialService.create(
+      file,
+      req.user.id,
+    );
+    return { jobId, message };
+  }
+
+  @Get('status/:id')
+  async getStatus(@Param('id') jobId: string) {
+    const jobStatus = await this.baseSerialService.getJobStatus(jobId);
+    return jobStatus;
+  }
+
+  @Get('status/jobs')
+  async getAllJobStatuses() {
+    const jobStatuses = await this.baseSerialService.getAllJobStatuses();
+    return jobStatuses;
+  }
+
+  @Get('status')
+  async getStatusUserJobs(@Req() req: ReqUserDto) {
+    const jobStatusUser = await this.baseSerialService.findAllStatusJobsUser(
+      req,
+    );
+    return jobStatusUser;
   }
 
   @Get('serial')
@@ -31,8 +55,30 @@ export class BaseSerialController {
     return this.baseSerialService.findAll(serial);
   }
 
+  @Get('/count')
+  async findAllCount(@Req() req: ReqUserDto) {
+    return await this.baseSerialService.findAllCount(req);
+  }
+
+  @Get('/codigo')
+  async findAllCodigo(@Req() req: ReqUserDto) {
+    return await this.baseSerialService.findAllCodigo(req);
+  }
+
   @Delete()
-  remove(@Req() req: ReqUserDto) {
-    return this.baseSerialService.remove(req);
+  async removeAll(@Req() req: ReqUserDto) {
+    const { jobId, message } = await this.baseSerialService.removeAll(
+      req.user.id,
+    );
+    return { jobId, message };
+  }
+
+  @Delete('/codigo')
+  async removeCodigo(@Req() req: ReqUserDto, @Query('codigo') codigo: string) {
+    const { jobId, message } = await this.baseSerialService.removeCodigo(
+      req.user.id,
+      codigo,
+    );
+    return { jobId, message };
   }
 }

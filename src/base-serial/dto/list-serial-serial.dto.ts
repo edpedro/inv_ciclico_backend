@@ -14,4 +14,11 @@ export class ListSerialDto {
   readonly nameProtocols?: string;
 
   readonly caixa?: number;
+
+  readonly user?: {
+    id: string;
+    name: string;
+    username: string;
+    role: string;
+  };
 }

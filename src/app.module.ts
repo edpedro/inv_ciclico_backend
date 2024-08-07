@@ -12,9 +12,20 @@ import { AdressesModule } from './adresses/adresses.module';
 import { NameProtocolModule } from './name-protocol/name-protocol.module';
 import { BaseProtocolModule } from './base-protocol/base-protocol.module';
 import { BaseSerialModule } from './base-serial/base-serial.module';
+import { BullModule } from '@nestjs/bull';
+import { ConfigModule } from '@nestjs/config';
+import { RedisModule } from './redis.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: Number(process.env.REDIS_PORT) || 6379,
+      },
+    }),
+    RedisModule,
     UsersModule,
     AuthModule,
     BaseInventarioModule,

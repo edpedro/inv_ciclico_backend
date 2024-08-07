@@ -29,6 +29,7 @@ model User {
   adresses Adresses[]
   nameProtocols NameProtocols[]
   baseSerial BaseSerial[]
+  statusJobs_User StatusJobs_User[]
   
   @@map("users")
 }
@@ -168,4 +169,17 @@ model BaseSerial {
   user_id String
 
   @@map("baseSerial") 
+}
+
+model StatusJobs_User {
+  id    String  @id @default(uuid())
+  jobN String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@map("statusJobUser") 
+  
 }
