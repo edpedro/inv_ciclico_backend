@@ -59,4 +59,25 @@ export class BaseProtocolRepository {
       },
     });
   }
+
+  async findIdProtocol(id: string) {
+    return await this.prisma.protocols.findMany({
+      where: {
+        nameProtocols_id: id,
+      },
+      include: {
+        nameProtocols: {
+          select: {
+            name: true,
+            date: true,
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 }

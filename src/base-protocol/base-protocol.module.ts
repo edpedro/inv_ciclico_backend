@@ -14,6 +14,7 @@ import { ListAllNameProtocolUseCase } from 'src/name-protocol/usecases/list-all-
 import { UsersRepository } from 'src/users/repositories/users.repository';
 import { ListUserOneUseCase } from 'src/users/usecases/list-user-one.usecase';
 import { ListUsersInvitedUseCase } from 'src/users/usecases/list-users-invited.usecase';
+import { ListIdProtocolUseCase } from './usecases/list-id-baseProtocol.usecase';
 
 @Module({
   controllers: [BaseProtocolController],
@@ -32,6 +33,7 @@ import { ListUsersInvitedUseCase } from 'src/users/usecases/list-users-invited.u
     ListAllNameProtocolUseCase,
     ListUserOneUseCase,
     ListUsersInvitedUseCase,
+    ListIdProtocolUseCase,
   ],
 })
 export class BaseProtocolModule {}

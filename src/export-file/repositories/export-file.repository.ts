@@ -1,6 +1,7 @@
 import { ListBaseInventarioDto } from './../../base-inventario/dto/list-base-inventario.dto';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ListProtocolExportFileDto } from '../dto/list-protocols-export-file.dto';
 
 @Injectable()
 export class ExportFileRepository {
@@ -27,4 +28,23 @@ export class ExportFileRepository {
       },
     });
   }
+
+  // async findAProtocol(id: string): Promise<ListProtocolExportFileDto[]> {
+  //   return await this.prisma.protocols.findMany({
+  //     where: {
+  //       nameProtocols_id: id,
+  //     },
+  //     orderBy: {
+  //       created_at: 'asc',
+  //     },
+  //     include: {
+  //       nameProtocols: {
+  //         select: {
+  //           name: true,
+  //           date: true,
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 }

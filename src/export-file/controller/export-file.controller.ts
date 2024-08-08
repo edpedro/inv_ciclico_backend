@@ -12,4 +12,8 @@ export class ExportFileController {
   exportFileFicha(@Param('id') id: string, @Res() res: Response) {
     return this.exportFileService.exportFicha(id, res);
   }
+  @Get('protocolo/:id')
+  exportFileProcotol(@Param('id') id: string, @Res() res: Response) {
+    return this.exportFileService.exportProtocol(id, res);
+  }
 }
