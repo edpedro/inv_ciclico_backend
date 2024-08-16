@@ -41,12 +41,12 @@ export class BaseSerialService {
       'upload',
       { file, userId },
       {
-        attempts: 5,
+        attempts: 2,
         backoff: {
           type: 'fixed',
           delay: 10000,
         },
-        removeOnFail: false,
+        removeOnFail: true,
         removeOnComplete: false,
       },
     );
@@ -133,12 +133,12 @@ export class BaseSerialService {
       throw new HttpException('Usuário não encontrado', HttpStatus.BAD_REQUEST);
     }
 
+    await this.redisClient.del(cacheKey);
+
     try {
       const data = await createExcelBaseSerial(file, userId);
       const chunkSize = 1000;
       const totalChunks = Math.ceil(data.length / chunkSize);
-
-      await this.redisClient.del(cacheKey);
 
       let totalProcessed = 0;
 
@@ -159,10 +159,6 @@ export class BaseSerialService {
 
         chunk.length = 0;
         formattedChunk.length = 0;
-
-        if (global.gc) {
-          global.gc();
-        }
       }
     } catch (error) {
       console.error('Erro durante o processamento do job:', error);

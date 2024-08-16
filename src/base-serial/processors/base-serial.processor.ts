@@ -21,6 +21,7 @@ export class BaseSerialProcessor {
       await job.moveToCompleted('done', true);
     } catch (error) {
       await job.moveToFailed({ message: error.message });
+      throw error;
     }
   }
 

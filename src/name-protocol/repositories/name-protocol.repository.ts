@@ -32,9 +32,13 @@ export class NameProtocolRepository {
 
   async findAllProtocolName(id: string): Promise<ListNameProtocolDto[]> {
     return await this.prisma.nameProtocols.findMany({
+      orderBy: {
+        created_at: 'desc',
+      },
       where: {
         user_id: id,
       },
+
       include: {
         user: {
           select: {
@@ -69,6 +73,9 @@ export class NameProtocolRepository {
     uniquesIds: string[],
   ): Promise<ListNameProtocolDto[]> {
     return await this.prisma.nameProtocols.findMany({
+      orderBy: {
+        created_at: 'desc',
+      },
       where: {
         id: {
           in: uniquesIds,

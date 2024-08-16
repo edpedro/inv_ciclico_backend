@@ -25,8 +25,9 @@ import { RedisModule } from 'src/redis.module';
     BullModule.registerQueue({
       name: 'baseSerialQueue',
       settings: {
-        stalledInterval: 60000, // Verifica a cada 60 segundos se há jobs travados
-        maxStalledCount: 2, // Permite que um job seja travado no máximo 2 vezes
+        stalledInterval: 60000, // Intervalo para verificar jobs travados (padrão: 30000 ms)
+        maxStalledCount: 1, // Número máximo de vezes que um job pode ser considerado travado (padrão: 1)
+        lockDuration: 300000, // Tempo de bloqueio do job em milissegundos antes de ser considerado travado (padrão: 30000 ms)
       },
     }),
     RedisModule,

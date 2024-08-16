@@ -1,11 +1,15 @@
 import { ListBaseInventarioDto } from './../../base-inventario/dto/list-base-inventario.dto';
 
 const FIELD_NAMES = {
-  date: 'Data',
-  user: 'Usuario',
-  codigo: 'Codigo',
-  serial: 'Serial',
-  caixa: 'Caixa',
+  item: 'Item',
+  descricao: 'Descricao',
+  endereco: 'Endereco',
+  tipoEstoque: 'Tip.Estoque',
+  catItem: 'Cat.Item',
+  saldoWms: 'Dispon.Exped.',
+  firstCount: 'Primeira Contagem',
+  secondCount: 'Segunda Contagem',
+  name: 'Usuário',
 };
 
 export async function renameFields(results: ListBaseInventarioDto[]) {
