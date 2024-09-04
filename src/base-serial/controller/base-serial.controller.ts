@@ -23,11 +23,11 @@ export class BaseSerialController {
   @Post()
   @UseInterceptors(FileInterceptor('file', multerOptions))
   async create(@UploadedFile() file: UploadDto, @Req() req: ReqUserDto) {
-    const { jobId, message } = await this.baseSerialService.create(
+    const { jobId, message, name } = await this.baseSerialService.create(
       file,
       req.user.id,
     );
-    return { jobId, message };
+    return { jobId, message, name };
   }
 
   @Get('status/:id')
@@ -80,5 +80,9 @@ export class BaseSerialController {
       codigo,
     );
     return { jobId, message };
+  }
+  @Delete('/clear')
+  async clearAllJobs() {
+    await this.baseSerialService.deleteAllJobs();
   }
 }

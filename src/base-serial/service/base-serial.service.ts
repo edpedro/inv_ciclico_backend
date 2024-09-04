@@ -41,12 +41,12 @@ export class BaseSerialService {
       'upload',
       { file, userId },
       {
-        attempts: 2,
+        attempts: 5,
         backoff: {
           type: 'fixed',
-          delay: 10000,
+          delay: 1000,
         },
-        removeOnFail: true,
+        removeOnFail: false,
         removeOnComplete: false,
       },
     );
@@ -60,7 +60,11 @@ export class BaseSerialService {
       await this.createStatusJobUserUseCase.execute(resultStatus);
     }
 
-    return { message: 'Upload iniciado', jobId: job.id };
+    return {
+      message: 'Upload iniciado',
+      jobId: job.id,
+      name: file.originalname,
+    };
   }
 
   async removeAll(userId: string) {
@@ -137,13 +141,14 @@ export class BaseSerialService {
 
     try {
       const data = await createExcelBaseSerial(file, userId);
-      const chunkSize = 1000;
+      const chunkSize = 10000;
       const totalChunks = Math.ceil(data.length / chunkSize);
 
       let totalProcessed = 0;
 
       for (let i = 0; i < totalChunks; i++) {
         const start = i * chunkSize;
+
         const end = start + chunkSize;
         const chunk = data.slice(start, end);
         const formattedChunk = chunk.map((item) => ({
@@ -155,13 +160,21 @@ export class BaseSerialService {
         totalProcessed += formattedChunk.length;
 
         const progress = Math.min((totalProcessed / data.length) * 100, 100);
+        console.log(
+          `Progresso do job ${job.id}: ${progress.toFixed()}% : ${
+            file.originalname
+          }`,
+        );
         await job.progress(progress);
 
         chunk.length = 0;
         formattedChunk.length = 0;
       }
+
+      await job.moveToCompleted('done', true);
     } catch (error) {
       console.error('Erro durante o processamento do job:', error);
+      await job.moveToFailed({ message: error.message });
       throw error;
     }
   }
@@ -365,4 +378,151 @@ export class BaseSerialService {
       throw new HttpException('Dados não deletados', HttpStatus.BAD_REQUEST);
     }
   }
+
+  async deleteAllJobs() {
+    try {
+      console.log('Pausando a fila...');
+      await this.baseSerialQueue.pause();
+
+      console.log('Limpando jobs completados...');
+      await this.baseSerialQueue.clean(0, 'completed');
+
+      console.log('Limpando jobs falhados...');
+      await this.baseSerialQueue.clean(0, 'failed');
+
+      console.log('Limpando jobs atrasados...');
+      await this.baseSerialQueue.clean(0, 'delayed');
+
+      console.log('Limpando jobs ativos...');
+      await this.baseSerialQueue.clean(0, 'active');
+
+      console.log('Limpando jobs pausados...');
+      await this.baseSerialQueue.clean(0, 'paused');
+
+      // Verifica e remove manualmente jobs restantes
+      console.log('Verificando e removendo manualmente jobs restantes...');
+      const jobs = await this.baseSerialQueue.getJobs([
+        'waiting',
+        'active',
+        'paused',
+        'delayed',
+      ]);
+      for (const job of jobs) {
+        try {
+          console.log(`Tentando remover job ${job.id}...`);
+          await job.remove();
+          console.log(`Job ${job.id} removido com sucesso.`);
+        } catch (err) {
+          console.error(`Erro ao tentar remover o job ${job.id}:`, err);
+
+          // Tenta remover o job diretamente do Redis
+          try {
+            const jobKey = `bull:${this.baseSerialQueue.name}:${job.id}`;
+            console.log(
+              `Tentando remover diretamente do Redis a chave ${jobKey}`,
+            );
+            await this.baseSerialQueue.client.del(jobKey);
+            console.log(`Chave ${jobKey} removida do Redis.`);
+          } catch (redisErr) {
+            console.error(
+              `Erro ao tentar remover diretamente do Redis a chave:`,
+              redisErr,
+            );
+          }
+        }
+      }
+
+      // Limpar dados diretamente no Redis
+      console.log('Limpando dados diretamente no Redis...');
+      const keys = await this.baseSerialQueue.client.keys(
+        `bull:${this.baseSerialQueue.name}:*`,
+      );
+      for (const key of keys) {
+        await this.baseSerialQueue.client.del(key);
+        console.log(`Chave ${key} removida do Redis.`);
+      }
+
+      console.log('Esvaziando a fila...');
+      await this.baseSerialQueue.empty();
+
+      console.log('Retomando a fila...');
+      await this.baseSerialQueue.resume();
+
+      return { message: 'Todos os jobs foram limpos com sucesso.' };
+    } catch (error) {
+      console.error('Erro ao tentar limpar os jobs:', error);
+      throw new HttpException(
+        'Erro ao tentar limpar os jobs',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  // async deleteAllJobs() {
+  //   try {
+  //     console.log('Pausando a fila...');
+  //     await this.baseSerialQueue.pause();
+
+  //     console.log('Limpando jobs completados...');
+  //     await this.baseSerialQueue.clean(0, 'completed');
+
+  //     console.log('Limpando jobs falhados...');
+  //     await this.baseSerialQueue.clean(0, 'failed');
+
+  //     console.log('Limpando jobs atrasados...');
+  //     await this.baseSerialQueue.clean(0, 'delayed');
+
+  //     console.log('Limpando jobs ativos...');
+  //     await this.baseSerialQueue.clean(0, 'active');
+
+  //     console.log('Limpando jobs pausados...');
+  //     await this.baseSerialQueue.clean(0, 'paused');
+
+  //     // Verifica e remove manualmente jobs restantes
+  //     console.log('Verificando e removendo manualmente jobs restantes...');
+  //     const jobs = await this.baseSerialQueue.getJobs([
+  //       'waiting',
+  //       'active',
+  //       'paused',
+  //       'delayed',
+  //     ]);
+  //     for (const job of jobs) {
+  //       try {
+  //         console.log(`Removendo job ${job.id}...`);
+  //         await job.remove();
+  //         console.log(`Job ${job.id} removido com sucesso.`);
+  //       } catch (err) {
+  //         console.error(`Erro ao remover jo ${job.id}:`, err);
+
+  //         // Tenta remover o job diretamente do Redis
+  //         try {
+  //           const jobKey = `bull:${this.baseSerialQueue.name}:${job.id}`;
+  //           console.log(
+  //             `Tentando remover diretamente do Redis a chave ${jobKey}`,
+  //           );
+  //           await this.baseSerialQueue.client.del(jobKey);
+  //           console.log(`Chave ${jobKey} removida do Redis.`);
+  //         } catch (redisErr) {
+  //           console.error(
+  //             `Erro ao remover diretamente do Redis a chave `,
+  //             redisErr,
+  //           );
+  //         }
+  //       }
+  //     }
+
+  //     console.log('Esvaziando a fila...');
+  //     await this.baseSerialQueue.empty();
+
+  //     console.log('Retomando a fila...');
+  //     await this.baseSerialQueue.resume();
+
+  //     return { message: 'Todos os jobs foram limpos com sucesso.' };
+  //   } catch (error) {
+  //     console.error('Erro ao tentar limpar os jobs:', error);
+  //     throw new HttpException(
+  //       'Erro ao tentar limpar os jobs',
+  //       HttpStatus.INTERNAL_SERVER_ERROR,
+  //     );
+  //   }
+  // }
 }
