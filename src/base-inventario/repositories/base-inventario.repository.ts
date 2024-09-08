@@ -213,36 +213,96 @@ export class BaseInventarioRepository {
       },
     });
   }
-
   async AlocateUserInventario(datas: AlocateEnderecoUserDto[], id: string) {
-    const data: AlocateEnderecoUserDto[] = datas;
+    const timeout = 30000; // 30 segundos
 
-    for (let index of data) {
-      const baseInventarioIds = index.baseInventario_ids;
+    return await this.prisma.$transaction(
+      async (prisma) => {
+        const createOperations = [];
 
-      for (const user_id of index.user_ids) {
-        for (const baseInventarioId of baseInventarioIds) {
-          const existingRecord = await this.prisma.usersOnEnderecos.findFirst({
-            where: {
-              user_id: user_id,
-              baseInventario_id: baseInventarioId,
+        // Primeiro, busque todos os registros existentes de uma vez
+        const existingRecords = await prisma.usersOnEnderecos.findMany({
+          where: {
+            baseNameInventario_id: id,
+            user_id: { in: datas.flatMap((d) => d.user_ids) },
+            baseInventario_id: {
+              in: datas.flatMap((d) => d.baseInventario_ids),
             },
-          });
+          },
+          select: {
+            user_id: true,
+            baseInventario_id: true,
+          },
+        });
 
-          if (!existingRecord) {
-            await this.prisma.usersOnEnderecos.create({
-              data: {
-                baseNameInventario_id: id,
-                user_id: user_id,
-                baseInventario_id: baseInventarioId,
-                assignedBy: 'auth',
-              },
-            });
+        // Crie um conjunto para verificação rápida
+        const existingSet = new Set(
+          existingRecords.map((r) => `${r.user_id}-${r.baseInventario_id}`),
+        );
+
+        for (const index of datas) {
+          const baseInventarioIds = index.baseInventario_ids;
+          for (const user_id of index.user_ids) {
+            for (const baseInventarioId of baseInventarioIds) {
+              const key = `${user_id}-${baseInventarioId}`;
+              if (!existingSet.has(key)) {
+                createOperations.push({
+                  baseNameInventario_id: id,
+                  user_id: user_id,
+                  baseInventario_id: baseInventarioId,
+                  assignedBy: 'auth',
+                });
+              }
+            }
           }
         }
-      }
-    }
+
+        // Use createMany para inserir todos os registros de uma vez
+        if (createOperations.length > 0) {
+          await prisma.usersOnEnderecos.createMany({
+            data: createOperations,
+            skipDuplicates: true, // Ignorar duplicados se houver
+          });
+        }
+
+        return createOperations.length; // Retorna o número de registros criados
+      },
+      {
+        timeout, // Define o timeout aumentado
+        maxWait: timeout, // Tempo máximo de espera para adquirir uma conexão do pool
+      },
+    );
   }
+
+  // async AlocateUserInventario(datas: AlocateEnderecoUserDto[], id: string) {
+  //   const data: AlocateEnderecoUserDto[] = datas;
+
+  //   for (let index of data) {
+  //     const baseInventarioIds = index.baseInventario_ids;
+
+  //     for (const user_id of index.user_ids) {
+  //       for (const baseInventarioId of baseInventarioIds) {
+  //         const existingRecord = await this.prisma.usersOnEnderecos.findFirst({
+  //           where: {
+  //             user_id: user_id,
+  //             baseInventario_id: baseInventarioId,
+  //           },
+  //         });
+
+  //         if (!existingRecord) {
+  //           await this.prisma.usersOnEnderecos.create({
+  //             data: {
+  //               baseNameInventario_id: id,
+  //               user_id: user_id,
+  //               baseInventario_id: baseInventarioId,
+  //               assignedBy: 'auth',
+  //             },
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   async findEndecoBaseInventario(id: string, req: ReqUserDto) {
     return await this.prisma.baseInventario.findMany({
