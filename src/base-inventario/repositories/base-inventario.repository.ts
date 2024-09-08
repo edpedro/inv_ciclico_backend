@@ -274,36 +274,6 @@ export class BaseInventarioRepository {
     );
   }
 
-  // async AlocateUserInventario(datas: AlocateEnderecoUserDto[], id: string) {
-  //   const data: AlocateEnderecoUserDto[] = datas;
-
-  //   for (let index of data) {
-  //     const baseInventarioIds = index.baseInventario_ids;
-
-  //     for (const user_id of index.user_ids) {
-  //       for (const baseInventarioId of baseInventarioIds) {
-  //         const existingRecord = await this.prisma.usersOnEnderecos.findFirst({
-  //           where: {
-  //             user_id: user_id,
-  //             baseInventario_id: baseInventarioId,
-  //           },
-  //         });
-
-  //         if (!existingRecord) {
-  //           await this.prisma.usersOnEnderecos.create({
-  //             data: {
-  //               baseNameInventario_id: id,
-  //               user_id: user_id,
-  //               baseInventario_id: baseInventarioId,
-  //               assignedBy: 'auth',
-  //             },
-  //           });
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-
   async findEndecoBaseInventario(id: string, req: ReqUserDto) {
     return await this.prisma.baseInventario.findMany({
       where: {
@@ -373,24 +343,33 @@ export class BaseInventarioRepository {
     datas: AlocateEnderecoUserDto[],
     id: string,
   ) {
-    const data: AlocateEnderecoUserDto[] = datas;
+    return await this.prisma.$transaction(async (prisma) => {
+      // Coleta todas as chaves que precisam ser removidas
+      const deleteConditions = [];
 
-    for (let index of data) {
-      const baseInventarioIds = index.baseInventario_ids;
-
-      for (const user_id of index.user_ids) {
-        for (const baseInventarioId of baseInventarioIds) {
-          await this.prisma.usersOnEnderecos.deleteMany({
-            where: {
+      for (const index of datas) {
+        const baseInventarioIds = index.baseInventario_ids;
+        for (const user_id of index.user_ids) {
+          for (const baseInventarioId of baseInventarioIds) {
+            deleteConditions.push({
               baseNameInventario_id: id,
               user_id: user_id,
               baseInventario_id: baseInventarioId,
               assignedBy: 'auth',
-            },
-          });
+            });
+          }
         }
       }
-    }
+
+      // Remove os registros de uma vez
+      if (deleteConditions.length > 0) {
+        await prisma.usersOnEnderecos.deleteMany({
+          where: {
+            OR: deleteConditions,
+          },
+        });
+      }
+    });
   }
 
   async removeIdAlocateUserInventario(id: string) {
