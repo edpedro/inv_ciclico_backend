@@ -131,11 +131,29 @@ export class NameInventarioRepository {
     });
   }
 
-  async deleteName(id: string) {
-    return await this.prisma.baseNameInventario.delete({
+  async deleteAdressName(id: string) {
+    await this.prisma.usersOnEnderecos.deleteMany({
       where: {
-        id,
+        baseNameInventario_id: id,
       },
+    });
+  }
+
+  async deleteName(id: string) {
+    return await this.prisma.$transaction(async (prisma) => {
+      // Primeiro, remova todas as referências
+      await prisma.usersOnEnderecos.deleteMany({
+        where: {
+          baseNameInventario_id: id,
+        },
+      });
+
+      // Então, exclua o registro principal
+      await prisma.baseNameInventario.delete({
+        where: {
+          id: id,
+        },
+      });
     });
   }
 

@@ -13,6 +13,7 @@ import { DeleteFkNameInventarioUseCase } from './usecases/delete-fk-nameInventar
 import { DeleteNameInventarioUseCase } from './usecases/delete-nameInventario';
 import { CreateFkNameInventarioUseCase } from './usecases/create-fk-nameInventario';
 import { UpdateNameInventarioUseCase } from './usecases/update-nameInventario';
+import { DeleteFkAdressNameInventarioUseCase } from './usecases/delete-fk-addres-nameInventario';
 
 @Module({
   imports: [UsersModule],
@@ -30,6 +31,7 @@ import { UpdateNameInventarioUseCase } from './usecases/update-nameInventario';
     DeleteNameInventarioUseCase,
     CreateFkNameInventarioUseCase,
     UpdateNameInventarioUseCase,
+    DeleteFkAdressNameInventarioUseCase,
   ],
 })
 export class NameInventarioModule {}
