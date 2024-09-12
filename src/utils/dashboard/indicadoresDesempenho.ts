@@ -1,6 +1,5 @@
 import { ListDashboardDto } from '../../dashboard/dto/list-dashboard.dto';
 import { Acuracidade } from './acuracidade';
-import { DivergeciasAcertos } from './divergeciasAcertos';
 import { RemoveDuplicatesEndereco } from './removeDuplicatesEndereco';
 import { RemoveDuplicatesItem } from './removeDuplicatesItem';
 import { TotalEndereco } from './totalEndereco';
@@ -16,11 +15,28 @@ export async function IndicadoresDesempenho(data: ListDashboardDto[]) {
     'ARM F',
     'ARM G',
     'ARM H',
+    'E ARM H',
+    'E ARM G',
+    'E OSP BLOC 1',
+    'E OSP BLOC 2',
+    'E OSP BLOC 3',
+    'E OSP BLOC 4',
+    'E OSP BLOC 5',
+    'E OSP BLOC 6',
+    'E OSP BLOC 7',
+    'E OSP BLOC 8',
+    'E OSP BLOC 9',
+    'E OSP BLOC 10',
     'E BLOC 1',
     'E BLOC 2',
     'E BLOC 3',
     'E BLOC 4',
     'E BLOC 5',
+    'E BLOC 6',
+    'E BLOC 7',
+    'E BLOC 8',
+    'E BLOC 9',
+    'E BLOC 10',
     'DOCA 5',
   ];
 
@@ -40,9 +56,7 @@ export async function IndicadoresDesempenho(data: ListDashboardDto[]) {
 
     const totalEndereco = TotalEndereco(removeDuplicatesEndereco);
 
-    const { totalDivergencia } = await DivergeciasAcertos(data);
-
-    const { acuracidade } = await Acuracidade(filter, totalDivergencia);
+    const { acuracidade } = await Acuracidade(filter, 0);
 
     indicadorDesem.push({
       Endereco: end[index],
