@@ -1,15 +1,8 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DashboardCreate } from '../../utils/dashboard/index';
 import { ListAllBaseInventarioUseCase } from 'src/base-inventario/usecases/list-all-inventario.usecase';
 
 @Injectable()
-@UseGuards(AuthGuard('jwt'))
 export class DashboardService {
   constructor(
     private readonly listAllBaseInventarioUseCase: ListAllBaseInventarioUseCase,

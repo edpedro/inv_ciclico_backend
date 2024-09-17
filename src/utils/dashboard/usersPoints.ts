@@ -2,7 +2,7 @@ import { ListDashboardDto } from '../../dashboard/dto/list-dashboard.dto';
 
 export async function UsersPoints(data: ListDashboardDto[]) {
   const users = data
-    .filter((user) => user.user !== null && user.user.role !== 'admin')
+    .filter((user) => user.user !== null)
     .reduce((acc, user) => {
       if (!acc[user.user.id]) {
         acc[user.user.id] = user.user;

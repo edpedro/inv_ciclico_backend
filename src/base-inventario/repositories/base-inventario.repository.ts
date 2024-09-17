@@ -122,6 +122,7 @@ export class BaseInventarioRepository {
       },
     });
   }
+
   async findOnItemInventario(id: number) {
     return await this.prisma.baseInventario.findUnique({
       where: {
