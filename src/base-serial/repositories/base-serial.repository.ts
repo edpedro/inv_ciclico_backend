@@ -20,6 +20,14 @@ export class BaseSerialRepository {
           equals: serialProt,
         },
       },
+      select: {
+        id: true,
+        serial: true,
+        codigo: true,
+        deposit: true,
+        center: true,
+      },
+      take: 4,
     });
   }
 

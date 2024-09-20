@@ -168,6 +168,7 @@ model BaseSerial {
   user User @relation(fields: [user_id], references: [id])
   user_id String
 
+  @@index([serial])
   @@map("baseSerial") 
 }
 
