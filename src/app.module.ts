@@ -15,6 +15,8 @@ import { BaseSerialModule } from './base-serial/base-serial.module';
 import { BullModule } from '@nestjs/bull';
 import { ConfigModule } from '@nestjs/config';
 import { RedisModule } from './redis.module';
+import { BaseNotafiscalModule } from './base-notafiscal/base-notafiscal.module';
+import { BaseExpedicaoModule } from './base-expedicao/base-expedicao.module';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { RedisModule } from './redis.module';
     NameProtocolModule,
     BaseProtocolModule,
     BaseSerialModule,
+    BaseNotafiscalModule,
+    BaseExpedicaoModule,
   ],
   providers: [PrismaService],
 })

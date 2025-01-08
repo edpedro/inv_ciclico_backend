@@ -2,6 +2,7 @@ import { ListBaseInventarioDto } from './../../base-inventario/dto/list-base-inv
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ListProtocolExportFileDto } from '../dto/list-protocols-export-file.dto';
+import { ListBaseExpedicaoDto } from 'src/base-expedicao/dto/list-base-expedicao.dto';
 
 @Injectable()
 export class ExportFileRepository {
@@ -47,4 +48,12 @@ export class ExportFileRepository {
   //     },
   //   });
   // }
+
+  async findExpedicaoId(id: string): Promise<ListBaseExpedicaoDto> {
+    return await this.prisma.baseExpedicao.findFirst({
+      where: {
+        id,
+      },
+    });
+  }
 }

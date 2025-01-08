@@ -30,6 +30,9 @@ model User {
   nameProtocols NameProtocols[]
   baseSerial BaseSerial[]
   statusJobs_User StatusJobs_User[]
+  baseNotaFiscal BaseNotaFiscal[]
+  baseFornecimento BaseFornecimento[]
+  baseExpedicao BaseExpedicao[]
   
   @@map("users")
 }
@@ -183,4 +186,70 @@ model StatusJobs_User {
 
   @@map("statusJobUser") 
   
+}
+
+model BaseNotaFiscal {
+  id        Int      @default(autoincrement()) @id
+  number     String
+  codigo     String
+  description   String
+  quantityNF   Float
+  totalValue   Float
+  quantityPhysical   Float?
+  supply   String
+  status    String   
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  
+  user User? @relation(fields: [user_id], references: [id])
+  user_id String?
+  conference_user String?
+
+  baseExpedicao BaseExpedicao @relation(fields: [baseExpedicao_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  baseExpedicao_id String
+
+ 
+  @@map("baseNotaFiscal") 
+
+}
+model BaseFornecimento {
+  id        Int      @default(autoincrement()) @id
+  number     String
+  codigo      String
+  description   String
+  quantity   Float
+  totalValue   Float     
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  user User? @relation(fields: [user_id], references: [id])
+  user_id String?
+
+ 
+  @@map("baseFornecimento") 
+
+}
+model BaseExpedicao {
+  id    String      @id @default(uuid())  
+  date String
+  name String
+  status   String @default("Pendente")   
+  pallet  Float?
+  volumes Float?
+  blocked Boolean? @default(false)
+  uploadPDF Boolean? @default(false)
+  uploadExcel Boolean? @default(false)
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  user User @relation(fields: [create_id], references: [id])
+  create_id String
+
+ 
+  baseNotaFiscal BaseNotaFiscal[]
+
+
+  @@map("baseExpedicao") 
+
 }

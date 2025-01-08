@@ -11,6 +11,11 @@ export class JwtStarty extends PassportStrategy(Strategy) {
   }
 
   async validate(paload: any) {
-    return { id: paload.sub, username: paload.username, role: paload.role };
+    return {
+      id: paload.sub,
+      username: paload.username,
+      name: paload.name,
+      role: paload.role,
+    };
   }
 }

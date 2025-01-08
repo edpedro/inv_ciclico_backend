@@ -14,6 +14,12 @@ import { ListIdNameProtocolUseCase } from 'src/name-protocol/usecases/list-id-na
 import { ListIdProtocolUseCase } from 'src/base-protocol/usecases/list-id-baseProtocol.usecase';
 import { NameProtocolRepository } from 'src/name-protocol/repositories/name-protocol.repository';
 import { BaseProtocolRepository } from 'src/base-protocol/repositories/base-protocol.repository';
+import { BaseNotaFiscalRepository } from 'src/base-notafiscal/repositories/base-notafiscal.repository';
+import { FindIdBaseNotaFiscalUseCase } from 'src/base-notafiscal/usecases/find-id-baseNotaFiscal.usecase';
+import { FindIdExpedicaoBaseNotaFiscalUseCase } from 'src/base-notafiscal/usecases/find-idExpedicao-baseNotaFiscal.usecase';
+import { BaseExpedicaoRepository } from 'src/base-expedicao/repositories/base-expedicao.repository';
+import { FindNameIdBaseExpedicaoUseCase } from 'src/base-expedicao/usecases/find-id-baseExpedicao.usecase';
+import { ListBaseExpedicaoUseCase } from './usecases/list-base-ecpedicao.export-file.usecase';
 
 @Module({
   imports: [UsersModule],
@@ -24,12 +30,17 @@ import { BaseProtocolRepository } from 'src/base-protocol/repositories/base-prot
     ExportFileRepository,
     NameProtocolRepository,
     BaseProtocolRepository,
+    BaseNotaFiscalRepository,
+    BaseExpedicaoRepository,
     ListBaseInventarioUseCase,
     ListOneInventarioUseCase,
     NameInventarioRepository,
     ListBaseProcotolUseCase,
     ListIdNameProtocolUseCase,
     ListIdProtocolUseCase,
+    FindIdExpedicaoBaseNotaFiscalUseCase,
+    FindNameIdBaseExpedicaoUseCase,
+    ListBaseExpedicaoUseCase,
   ],
 })
 export class ExportFileModule {}
